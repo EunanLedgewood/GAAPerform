@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="GAAPerform.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:GAAPerform.Views"
+    Shell.FlyoutBehavior="Disabled">
+
+    <TabBar>
+        <ShellContent
+            Title="This Week"
+            ContentTemplate="{DataTemplate views:WeekPage}"
+            Route="WeekPage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8f5;" Size="22" />
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <ShellContent
+            Title="Readiness"
+            ContentTemplate="{DataTemplate views:ReadinessPage}"
+            Route="ReadinessPage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe1db;" Size="22" />
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <ShellContent
+            Title="Log"
+            ContentTemplate="{DataTemplate views:LogPage}"
+            Route="LogPage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe3c9;" Size="22" />
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <ShellContent
+            Title="Profile"
+            ContentTemplate="{DataTemplate views:ProfilePage}"
+            Route="ProfilePage">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe7fd;" Size="22" />
+            </ShellContent.Icon>
+        </ShellContent>
+    </TabBar>
+
+</Shell>

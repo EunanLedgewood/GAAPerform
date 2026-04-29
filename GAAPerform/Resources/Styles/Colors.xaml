@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- GAA Brand Colors -->
+    <Color x:Key="GaaGreen">#1a5c35</Color>
+    <Color x:Key="GaaGreenLight">#2a7a48</Color>
+    <Color x:Key="GaaGold">#c8a84b</Color>
+    <Color x:Key="GaaGoldLight">#e8c86a</Color>
+    <Color x:Key="GaaGoldMuted">#f5f0e0</Color>
+
+    <!-- Semantic -->
+    <Color x:Key="DangerColor">#c0392b</Color>
+    <Color x:Key="WarningColor">#e67e22</Color>
+    <Color x:Key="InfoColor">#2980b9</Color>
+
+    <!-- Light Theme -->
+    <Color x:Key="PageBackground">#f5f5f0</Color>
+    <Color x:Key="CardBackground">White</Color>
+    <Color x:Key="SurfaceBackground">#f0f0eb</Color>
+    <Color x:Key="PrimaryText">#1a1a1a</Color>
+    <Color x:Key="SecondaryText">#6b6b6b</Color>
+    <Color x:Key="BorderColor">#e0e0d8</Color>
+    <Color x:Key="TagBackground">#eeeeea</Color>
+
+</ResourceDictionary>

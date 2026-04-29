@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GAAPerform.Views.ReadinessPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Readiness">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,12" Spacing="0">
+
+            <!-- Readiness score card -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                <Grid ColumnDefinitions="70,*" ColumnSpacing="16">
+
+                    <!-- Score circle -->
+                    <Grid Grid.Column="0" WidthRequest="64" HeightRequest="64">
+                        <Border
+                            WidthRequest="64"
+                            HeightRequest="64"
+                            StrokeThickness="4"
+                            Stroke="{StaticResource GaaGreen}"
+                            StrokeShape="RoundRectangle 32"
+                            BackgroundColor="{StaticResource SurfaceBackground}"/>
+                        <Label
+                            Text="{Binding ReadinessScore}"
+                            FontSize="22"
+                            FontAttributes="Bold"
+                            TextColor="{StaticResource GaaGreen}"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"/>
+                    </Grid>
+
+                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                        <Label Text="{Binding ReadinessLabel}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
+                        <Label Text="{Binding ReadinessDescription}" FontSize="13" TextColor="{StaticResource SecondaryText}" LineHeight="1.4"/>
+                        <ProgressBar
+                            Progress="{Binding ReadinessProgress}"
+                            ProgressColor="{StaticResource GaaGreen}"
+                            BackgroundColor="{StaticResource SurfaceBackground}"
+                            HeightRequest="4"
+                            Margin="0,6,0,0"/>
+                    </VerticalStackLayout>
+
+                </Grid>
+            </Border>
+
+            <!-- Metrics grid -->
+            <Label Text="This week's load" Style="{StaticResource SectionTitle}"/>
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8" Margin="0,0,0,8">
+
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource Card}" Margin="0" BackgroundColor="{StaticResource SurfaceBackground}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="{Binding SessionsDoneThisWeek}" Style="{StaticResource MetricValue}"/>
+                        <Label Text="Sessions done" Style="{StaticResource MetricLabel}"/>
+                        <Label Text="Target: 4" FontSize="12" TextColor="{StaticResource SecondaryText}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource Card}" Margin="0" BackgroundColor="{StaticResource SurfaceBackground}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="{Binding LastMatchMinutes}" Style="{StaticResource MetricValue}"/>
+                        <Label Text="Last match mins" Style="{StaticResource MetricLabel}"/>
+                        <Label Text="Full game = 70" FontSize="12" TextColor="{StaticResource SecondaryText}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource Card}" Margin="0" BackgroundColor="{StaticResource SurfaceBackground}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="{Binding AverageFeeling}" Style="{StaticResource MetricValue}"/>
+                        <Label Text="Avg feeling" Style="{StaticResource MetricLabel}"/>
+                        <Label Text="Out of 5" FontSize="12" TextColor="{StaticResource SecondaryText}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource Card}" Margin="0" BackgroundColor="{StaticResource SurfaceBackground}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="{Binding AverageSoreness}" Style="{StaticResource MetricValue}"/>
+                        <Label Text="Avg soreness" Style="{StaticResource MetricLabel}"/>
+                        <Label Text="Out of 5" FontSize="12" TextColor="{StaticResource SecondaryText}"/>
+                    </VerticalStackLayout>
+                </Border>
+
+            </Grid>
+
+            <!-- Log a session prompt -->
+            <Border Style="{StaticResource Card}" Margin="0,8,0,0" BackgroundColor="{StaticResource GaaGreen}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Text="Log today's session to update your score" FontSize="14" FontAttributes="Bold" TextColor="White"/>
+                    <Label Text="Head to the Log tab after your session." FontSize="12" TextColor="#aad4b8"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
