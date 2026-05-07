@@ -21,9 +21,14 @@ public partial class LogViewModel : ObservableObject
         _db = db;
     }
 
-    [RelayCommand] private void SetFeeling(int score) => FeelingScore = score;
-    [RelayCommand] private void SetSoreness(int score) => SorenessScore = score;
-    [RelayCommand] private void SetMatchMinutes(int mins) => MatchMinutes = mins;
+    [RelayCommand]
+    private void SetFeeling(string score) => FeelingScore = int.Parse(score);
+
+    [RelayCommand]
+    private void SetSoreness(string score) => SorenessScore = int.Parse(score);
+
+    [RelayCommand]
+    private void SetMatchMinutes(string mins) => MatchMinutes = int.Parse(mins);
 
     [RelayCommand]
     private async Task SubmitLogAsync()
