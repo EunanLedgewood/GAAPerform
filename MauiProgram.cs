@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using GAAPerform.Services;
+﻿using GAAPerform.Services;
 using GAAPerform.ViewModels;
+using GAAPerform.Views;
+using Microsoft.Extensions.Logging;
 
 namespace GAAPerform;
 
@@ -27,6 +28,12 @@ public static class MauiProgram
         builder.Services.AddTransient<ReadinessViewModel>();
         builder.Services.AddTransient<LogViewModel>();
         builder.Services.AddTransient<ProfileViewModel>();
+
+        // Views
+        builder.Services.AddTransient<WeekPage>();
+        builder.Services.AddTransient<ReadinessPage>();
+        builder.Services.AddTransient<LogPage>();
+        builder.Services.AddTransient<ProfilePage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

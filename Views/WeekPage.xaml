@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GAAPerform.Views.WeekPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="This Week">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,12" Spacing="8">
+            <Label Text="{Binding WeekLabel}" FontSize="20" FontAttributes="Bold" TextColor="#1a5c35"/>
+            <Label Text="Loading your week..." TextColor="#6b6b6b" IsVisible="{Binding IsLoading}"/>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

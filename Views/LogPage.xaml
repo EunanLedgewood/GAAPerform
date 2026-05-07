@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GAAPerform.Views.LogPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Log Session">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,12" Spacing="16">
+            <Label Text="Log Today's Session" FontSize="20" FontAttributes="Bold" TextColor="#1a5c35"/>
+            <Label Text="How do you feel? (1-5)" FontSize="14" TextColor="#6b6b6b"/>
+            <HorizontalStackLayout Spacing="8">
+                <Button Text="1" Command="{Binding SetFeelingCommand}" CommandParameter="1" BackgroundColor="#1a5c35" TextColor="White" CornerRadius="8" WidthRequest="52" HeightRequest="44"/>
+                <Button Text="2" Command="{Binding SetFeelingCommand}" CommandParameter="2" BackgroundColor="#1a5c35" TextColor="White" CornerRadius="8" WidthRequest="52" HeightRequest="44"/>
+                <Button Text="3" Command="{Binding SetFeelingCommand}" CommandParameter="3" BackgroundColor="#1a5c35" TextColor="White" CornerRadius="8" WidthRequest="52" HeightRequest="44"/>
+                <Button Text="4" Command="{Binding SetFeelingCommand}" CommandParameter="4" BackgroundColor="#1a5c35" TextColor="White" CornerRadius="8" WidthRequest="52" HeightRequest="44"/>
+                <Button Text="5" Command="{Binding SetFeelingCommand}" CommandParameter="5" BackgroundColor="#1a5c35" TextColor="White" CornerRadius="8" WidthRequest="52" HeightRequest="44"/>
+            </HorizontalStackLayout>
+            <Button Text="Save Session" Command="{Binding SubmitLogCommand}" BackgroundColor="#1a5c35" TextColor="White" CornerRadius="8" IsVisible="{Binding IsNotSubmitted}"/>
+            <Label Text="{Binding SubmitMessage}" FontSize="14" TextColor="#1a5c35" IsVisible="{Binding IsSubmitted}"/>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

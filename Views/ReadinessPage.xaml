@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GAAPerform.Views.ReadinessPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Readiness">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,12" Spacing="8">
+            <Label Text="Readiness Score" FontSize="20" FontAttributes="Bold" TextColor="#1a5c35"/>
+            <Label Text="{Binding ReadinessScore}" FontSize="48" FontAttributes="Bold" TextColor="#1a5c35" HorizontalOptions="Center"/>
+            <Label Text="{Binding ReadinessLabel}" FontSize="16" HorizontalOptions="Center"/>
+            <Label Text="{Binding ReadinessDescription}" FontSize="13" TextColor="#6b6b6b" HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
