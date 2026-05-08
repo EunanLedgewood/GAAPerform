@@ -22,4 +22,5 @@ public class UserProfile
     public Position Position { get; set; } = Position.Midfielder;
     public SeasonMode SeasonMode { get; set; } = SeasonMode.InSeason;
     public DateTime? NextMatchDate { get; set; }
+    public bool HasCompletedOnboarding { get; set; } = false;
 }

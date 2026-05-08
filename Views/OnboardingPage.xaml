@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GAAPerform.Views.OnboardingPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    BackgroundColor="{StaticResource PageBackground}"
+    Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,48" Spacing="0">
+
+            <!-- STEP 1 - Welcome -->
+            <VerticalStackLayout IsVisible="{Binding IsStep1}" Spacing="0">
+
+                <Label
+                    Text="GAA PERFORM"
+                    FontSize="36"
+                    FontAttributes="Bold"
+                    TextColor="{StaticResource GaaGreen}"
+                    CharacterSpacing="2"
+                    HorizontalOptions="Center"
+                    Margin="0,0,0,8"/>
+
+                <Label
+                    Text="Your GAA training system"
+                    FontSize="16"
+                    TextColor="{StaticResource SecondaryText}"
+                    HorizontalOptions="Center"
+                    Margin="0,0,0,48"/>
+
+                <!-- Feature highlights -->
+                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                    <Grid ColumnDefinitions="40,*" ColumnSpacing="12">
+                        <Label Grid.Column="0" Text="📅" FontSize="24" VerticalOptions="Center" HorizontalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Match-aware training" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
+                            <Label Text="Your week automatically adjusts around match day." FontSize="12" TextColor="{StaticResource SecondaryText}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                    <Grid ColumnDefinitions="40,*" ColumnSpacing="12">
+                        <Label Grid.Column="0" Text="💪" FontSize="24" VerticalOptions="Center" HorizontalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Position-specific plans" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
+                            <Label Text="Built for your position on the field, not generic gym plans." FontSize="12" TextColor="{StaticResource SecondaryText}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource Card}" Margin="0,0,0,36">
+                    <Grid ColumnDefinitions="40,*" ColumnSpacing="12">
+                        <Label Grid.Column="0" Text="📊" FontSize="24" VerticalOptions="Center" HorizontalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                            <Label Text="Fatigue tracking" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
+                            <Label Text="Log sessions and get smart readiness scores." FontSize="12" TextColor="{StaticResource SecondaryText}"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <Label Text="WHAT'S YOUR NAME?" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+                <Border
+                    BackgroundColor="{StaticResource CardBackground}"
+                    StrokeThickness="0.5"
+                    Stroke="{StaticResource BorderColor}"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="12,4"
+                    Margin="0,0,0,24">
+                    <Entry
+                        Text="{Binding PlayerName}"
+                        Placeholder="Enter your name"
+                        FontSize="16"
+                        PlaceholderColor="{StaticResource SecondaryText}"
+                        TextColor="{StaticResource PrimaryText}"
+                        BackgroundColor="Transparent"/>
+                </Border>
+
+                <Button
+                    Text="Get Started →"
+                    Command="{Binding GoToStep2Command}"
+                    Style="{StaticResource GreenButton}"/>
+
+            </VerticalStackLayout>
+
+            <!-- STEP 2 - Position -->
+            <VerticalStackLayout IsVisible="{Binding IsStep2}" Spacing="0">
+
+                <Label Text="Step 2 of 3" FontSize="12" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center" Margin="0,0,0,8"/>
+                <Label Text="What's your position?" FontSize="26" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}" HorizontalOptions="Center" Margin="0,0,0,6"/>
+                <Label Text="We'll build your training plan around it." FontSize="14" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center" Margin="0,0,0,32"/>
+
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12" Margin="0,0,0,32">
+
+                    <Border Grid.Row="0" Grid.Column="0"
+                        BackgroundColor="{Binding IsGoalkeeper, Converter={StaticResource BoolToSelectedBgConverter}}"
+                        StrokeThickness="2"
+                        Stroke="{Binding IsGoalkeeper, Converter={StaticResource BoolToSelectedStrokeConverter}}"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="12,16">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectPositionCommand}" CommandParameter="Goalkeeper"/>
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="🥅" FontSize="32" HorizontalOptions="Center"/>
+                            <Label Text="Goalkeeper" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+                            <Label Text="Power + agility" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="0" Grid.Column="1"
+                        BackgroundColor="{Binding IsFullback, Converter={StaticResource BoolToSelectedBgConverter}}"
+                        StrokeThickness="2"
+                        Stroke="{Binding IsFullback, Converter={StaticResource BoolToSelectedStrokeConverter}}"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="12,16">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectPositionCommand}" CommandParameter="Fullback"/>
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="🛡️" FontSize="32" HorizontalOptions="Center"/>
+                            <Label Text="Full-back" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+                            <Label Text="Strength + short bursts" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="0"
+                        BackgroundColor="{Binding IsMidfielder, Converter={StaticResource BoolToSelectedBgConverter}}"
+                        StrokeThickness="2"
+                        Stroke="{Binding IsMidfielder, Converter={StaticResource BoolToSelectedStrokeConverter}}"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="12,16">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectPositionCommand}" CommandParameter="Midfielder"/>
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="🔄" FontSize="32" HorizontalOptions="Center"/>
+                            <Label Text="Midfielder" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+                            <Label Text="Endurance + sprints" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1"
+                        BackgroundColor="{Binding IsForward, Converter={StaticResource BoolToSelectedBgConverter}}"
+                        StrokeThickness="2"
+                        Stroke="{Binding IsForward, Converter={StaticResource BoolToSelectedStrokeConverter}}"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="12,16">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectPositionCommand}" CommandParameter="Forward"/>
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="⚡" FontSize="32" HorizontalOptions="Center"/>
+                            <Label Text="Forward" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+                            <Label Text="Agility + acceleration" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                </Grid>
+
+                <Button
+                    Text="Next →"
+                    Command="{Binding GoToStep3Command}"
+                    Style="{StaticResource GreenButton}"/>
+
+            </VerticalStackLayout>
+
+            <!-- STEP 3 - Setup -->
+            <VerticalStackLayout IsVisible="{Binding IsStep3}" Spacing="0">
+
+                <Label Text="Step 3 of 3" FontSize="12" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center" Margin="0,0,0,8"/>
+                <Label Text="Set up your season" FontSize="26" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}" HorizontalOptions="Center" Margin="0,0,0,6"/>
+                <Label Text="You can change this any time in Profile." FontSize="14" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center" Margin="0,0,0,32"/>
+
+                <!-- Season mode -->
+                <Label Text="SEASON MODE" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+                <Border
+                    BackgroundColor="{StaticResource SurfaceBackground}"
+                    StrokeThickness="0.5"
+                    Stroke="{StaticResource BorderColor}"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="4"
+                    Margin="0,0,0,24">
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="4">
+                        <Button Grid.Column="0" Text="In-season"
+                            Command="{Binding SelectSeasonModeCommand}" CommandParameter="InSeason"
+                            BackgroundColor="{Binding IsInSeason, Converter={StaticResource BoolToActiveModeConverter}}"
+                            TextColor="{Binding IsInSeason, Converter={StaticResource BoolToActiveModeTextConverter}}"
+                            FontSize="12" FontAttributes="Bold" CornerRadius="8" HeightRequest="38" BorderWidth="0"/>
+                        <Button Grid.Column="1" Text="Pre-season"
+                            Command="{Binding SelectSeasonModeCommand}" CommandParameter="PreSeason"
+                            BackgroundColor="{Binding IsPreSeason, Converter={StaticResource BoolToActiveModeConverter}}"
+                            TextColor="{Binding IsPreSeason, Converter={StaticResource BoolToActiveModeTextConverter}}"
+                            FontSize="12" CornerRadius="8" HeightRequest="38" BorderWidth="0"/>
+                        <Button Grid.Column="2" Text="Off-season"
+                            Command="{Binding SelectSeasonModeCommand}" CommandParameter="OffSeason"
+                            BackgroundColor="{Binding IsOffSeason, Converter={StaticResource BoolToActiveModeConverter}}"
+                            TextColor="{Binding IsOffSeason, Converter={StaticResource BoolToActiveModeTextConverter}}"
+                            FontSize="12" CornerRadius="8" HeightRequest="38" BorderWidth="0"/>
+                    </Grid>
+                </Border>
+
+                <!-- Next match date -->
+                <Label Text="WHEN IS YOUR NEXT MATCH?" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+                <Border
+                    BackgroundColor="{StaticResource CardBackground}"
+                    StrokeThickness="0.5"
+                    Stroke="{StaticResource BorderColor}"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="12,4"
+                    Margin="0,0,0,32">
+                    <DatePicker
+                        Date="{Binding NextMatchDate}"
+                        MinimumDate="{x:Static sys:DateTime.Today}"
+                        TextColor="{StaticResource PrimaryText}"
+                        BackgroundColor="Transparent"
+                        FontSize="16"
+                        xmlns:sys="clr-namespace:System;assembly=mscorlib"/>
+                </Border>
+
+                <Button
+                    Text="Let's go! 🏐"
+                    Command="{Binding CompleteOnboardingCommand}"
+                    Style="{StaticResource GreenButton}"/>
+
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

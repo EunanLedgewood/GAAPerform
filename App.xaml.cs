@@ -1,17 +1,29 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using GAAPerform.Services;
+using GAAPerform.Views;
 
-namespace GAAPerform
+namespace GAAPerform;
+
+public partial class App : Application
 {
-    public partial class App : Application
+    private readonly DatabaseService _db;
+
+    public App(DatabaseService db)
     {
-        public App()
+        InitializeComponent();
+        _db = db;
+    }
+
+    protected override Window CreateWindow(IActivationState? activationState)
+    {
+        var profile = _db.GetProfileAsync().Result;
+
+        if (!profile.HasCompletedOnboarding)
         {
-            InitializeComponent();
+            var onboardingPage = Handler!.MauiContext!.Services
+                .GetRequiredService<OnboardingPage>();
+            return new Window(new NavigationPage(onboardingPage));
         }
 
-        protected override Window CreateWindow(IActivationState? activationState)
-        {
-            return new Window(new AppShell());
-        }
+        return new Window(new AppShell());
     }
 }
