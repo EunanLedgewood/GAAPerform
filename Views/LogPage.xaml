@@ -3,22 +3,116 @@
     x:Class="GAAPerform.Views.LogPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Log Session">
+    Title="Log Session"
+    BackgroundColor="{StaticResource PageBackground}">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="16,12" Spacing="16">
-            <Label Text="Log Today's Session" FontSize="20" FontAttributes="Bold" TextColor="#1a5c35"/>
-            <Label Text="How do you feel? (1-5)" FontSize="14" TextColor="#6b6b6b"/>
-            <HorizontalStackLayout Spacing="8">
-                <Button Text="1" Command="{Binding SetFeelingCommand}" CommandParameter="1" BackgroundColor="#1a5c35" TextColor="White" CornerRadius="8" WidthRequest="52" HeightRequest="44"/>
-                <Button Text="2" Command="{Binding SetFeelingCommand}" CommandParameter="2" BackgroundColor="#1a5c35" TextColor="White" CornerRadius="8" WidthRequest="52" HeightRequest="44"/>
-                <Button Text="3" Command="{Binding SetFeelingCommand}" CommandParameter="3" BackgroundColor="#1a5c35" TextColor="White" CornerRadius="8" WidthRequest="52" HeightRequest="44"/>
-                <Button Text="4" Command="{Binding SetFeelingCommand}" CommandParameter="4" BackgroundColor="#1a5c35" TextColor="White" CornerRadius="8" WidthRequest="52" HeightRequest="44"/>
-                <Button Text="5" Command="{Binding SetFeelingCommand}" CommandParameter="5" BackgroundColor="#1a5c35" TextColor="White" CornerRadius="8" WidthRequest="52" HeightRequest="44"/>
-            </HorizontalStackLayout>
-            <Button Text="Save Session" Command="{Binding SubmitLogCommand}" BackgroundColor="#1a5c35" TextColor="White" CornerRadius="8" IsVisible="{Binding IsNotSubmitted}"/>
-            <Label Text="{Binding SubmitMessage}" FontSize="14" TextColor="#1a5c35" IsVisible="{Binding IsSubmitted}"/>
-        </VerticalStackLayout>
-    </ScrollView>
+	<ScrollView>
+		<VerticalStackLayout Padding="16,12" Spacing="0">
 
+			<!-- Log form -->
+			<VerticalStackLayout IsVisible="{Binding IsNotSubmitted}" Spacing="0">
+
+				<!-- Feeling -->
+				<Border Style="{StaticResource Card}">
+					<VerticalStackLayout Spacing="10">
+						<Label Text="HOW DO YOU FEEL?" Style="{StaticResource SectionTitle}"/>
+						<Label Text="Rate your energy and wellbeing after this session." FontSize="13" TextColor="{StaticResource SecondaryText}"/>
+						<HorizontalStackLayout Spacing="8">
+							<Button Text="1" Command="{Binding SetFeelingCommand}" CommandParameter="1"
+                                BackgroundColor="{StaticResource GaaGreen}" TextColor="White"
+                                CornerRadius="8" WidthRequest="52" HeightRequest="44" FontAttributes="Bold"/>
+							<Button Text="2" Command="{Binding SetFeelingCommand}" CommandParameter="2"
+                                BackgroundColor="{StaticResource GaaGreen}" TextColor="White"
+                                CornerRadius="8" WidthRequest="52" HeightRequest="44" FontAttributes="Bold"/>
+							<Button Text="3" Command="{Binding SetFeelingCommand}" CommandParameter="3"
+                                BackgroundColor="{StaticResource GaaGreen}" TextColor="White"
+                                CornerRadius="8" WidthRequest="52" HeightRequest="44" FontAttributes="Bold"/>
+							<Button Text="4" Command="{Binding SetFeelingCommand}" CommandParameter="4"
+                                BackgroundColor="{StaticResource GaaGreen}" TextColor="White"
+                                CornerRadius="8" WidthRequest="52" HeightRequest="44" FontAttributes="Bold"/>
+							<Button Text="5" Command="{Binding SetFeelingCommand}" CommandParameter="5"
+                                BackgroundColor="{StaticResource GaaGreen}" TextColor="White"
+                                CornerRadius="8" WidthRequest="52" HeightRequest="44" FontAttributes="Bold"/>
+						</HorizontalStackLayout>
+						<Label Text="{Binding FeelingScore, StringFormat='Selected: {0}'}"
+                            FontSize="12" TextColor="{StaticResource GaaGreen}" FontAttributes="Bold"/>
+					</VerticalStackLayout>
+				</Border>
+
+				<!-- Soreness -->
+				<Border Style="{StaticResource Card}">
+					<VerticalStackLayout Spacing="10">
+						<Label Text="SORENESS?" Style="{StaticResource SectionTitle}"/>
+						<Label Text="1 = none, 5 = very sore" FontSize="13" TextColor="{StaticResource SecondaryText}"/>
+						<HorizontalStackLayout Spacing="8">
+							<Button Text="1" Command="{Binding SetSorenessCommand}" CommandParameter="1"
+                                BackgroundColor="{StaticResource SurfaceBackground}" TextColor="{StaticResource PrimaryText}"
+                                CornerRadius="8" WidthRequest="52" HeightRequest="44" FontAttributes="Bold"/>
+							<Button Text="2" Command="{Binding SetSorenessCommand}" CommandParameter="2"
+                                BackgroundColor="{StaticResource SurfaceBackground}" TextColor="{StaticResource PrimaryText}"
+                                CornerRadius="8" WidthRequest="52" HeightRequest="44" FontAttributes="Bold"/>
+							<Button Text="3" Command="{Binding SetSorenessCommand}" CommandParameter="3"
+                                BackgroundColor="{StaticResource SurfaceBackground}" TextColor="{StaticResource PrimaryText}"
+                                CornerRadius="8" WidthRequest="52" HeightRequest="44" FontAttributes="Bold"/>
+							<Button Text="4" Command="{Binding SetSorenessCommand}" CommandParameter="4"
+                                BackgroundColor="{StaticResource SurfaceBackground}" TextColor="{StaticResource PrimaryText}"
+                                CornerRadius="8" WidthRequest="52" HeightRequest="44" FontAttributes="Bold"/>
+							<Button Text="5" Command="{Binding SetSorenessCommand}" CommandParameter="5"
+                                BackgroundColor="{StaticResource SurfaceBackground}" TextColor="{StaticResource PrimaryText}"
+                                CornerRadius="8" WidthRequest="52" HeightRequest="44" FontAttributes="Bold"/>
+						</HorizontalStackLayout>
+						<Label Text="{Binding SorenessScore, StringFormat='Selected: {0}'}"
+                            FontSize="12" TextColor="{StaticResource GaaGreen}" FontAttributes="Bold"/>
+					</VerticalStackLayout>
+				</Border>
+
+				<!-- Match minutes -->
+				<Border Style="{StaticResource Card}">
+					<VerticalStackLayout Spacing="10">
+						<Label Text="MINUTES PLAYED IN LAST MATCH?" Style="{StaticResource SectionTitle}"/>
+						<HorizontalStackLayout Spacing="8" Margin="0,4,0,0">
+							<Button Text="0" Command="{Binding SetMatchMinutesCommand}" CommandParameter="0"
+                                BackgroundColor="{StaticResource SurfaceBackground}" TextColor="{StaticResource PrimaryText}"
+                                CornerRadius="20" WidthRequest="56" HeightRequest="36" FontSize="13"/>
+							<Button Text="15" Command="{Binding SetMatchMinutesCommand}" CommandParameter="15"
+                                BackgroundColor="{StaticResource SurfaceBackground}" TextColor="{StaticResource PrimaryText}"
+                                CornerRadius="20" WidthRequest="56" HeightRequest="36" FontSize="13"/>
+							<Button Text="30" Command="{Binding SetMatchMinutesCommand}" CommandParameter="30"
+                                BackgroundColor="{StaticResource SurfaceBackground}" TextColor="{StaticResource PrimaryText}"
+                                CornerRadius="20" WidthRequest="56" HeightRequest="36" FontSize="13"/>
+							<Button Text="45" Command="{Binding SetMatchMinutesCommand}" CommandParameter="45"
+                                BackgroundColor="{StaticResource SurfaceBackground}" TextColor="{StaticResource PrimaryText}"
+                                CornerRadius="20" WidthRequest="56" HeightRequest="36" FontSize="13"/>
+							<Button Text="60" Command="{Binding SetMatchMinutesCommand}" CommandParameter="60"
+                                BackgroundColor="{StaticResource SurfaceBackground}" TextColor="{StaticResource PrimaryText}"
+                                CornerRadius="20" WidthRequest="56" HeightRequest="36" FontSize="13"/>
+							<Button Text="70+" Command="{Binding SetMatchMinutesCommand}" CommandParameter="70"
+                                BackgroundColor="{StaticResource SurfaceBackground}" TextColor="{StaticResource PrimaryText}"
+                                CornerRadius="20" WidthRequest="56" HeightRequest="36" FontSize="13"/>
+						</HorizontalStackLayout>
+						<Label Text="{Binding MatchMinutes, StringFormat='Selected: {0} mins'}"
+                            FontSize="12" TextColor="{StaticResource GaaGreen}" FontAttributes="Bold"/>
+					</VerticalStackLayout>
+				</Border>
+
+				<Button
+                    Text="Save Session"
+                    Command="{Binding SubmitLogCommand}"
+                    Style="{StaticResource GreenButton}"
+                    Margin="0,8,0,0"/>
+
+			</VerticalStackLayout>
+
+			<!-- Success state -->
+			<Border Style="{StaticResource Card}" IsVisible="{Binding IsSubmitted}" Margin="0,16,0,0">
+				<VerticalStackLayout Spacing="8" HorizontalOptions="Center" Padding="0,16">
+					<Label Text="✓" FontSize="48" HorizontalOptions="Center" TextColor="{StaticResource GaaGreen}"/>
+					<Label Text="Session logged" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+					<Label Text="{Binding SubmitMessage}" FontSize="13" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center" HorizontalTextAlignment="Center" Margin="0,4,0,0"/>
+					<Button Text="Log another session" Command="{Binding ResetCommand}" Style="{StaticResource GreenButton}" Margin="0,12,0,0"/>
+				</VerticalStackLayout>
+			</Border>
+
+		</VerticalStackLayout>
+	</ScrollView>
 </ContentPage>
