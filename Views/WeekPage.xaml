@@ -3,13 +3,130 @@
     x:Class="GAAPerform.Views.WeekPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="This Week">
+    xmlns:models="clr-namespace:GAAPerform.Models"
+    xmlns:vm="clr-namespace:GAAPerform.ViewModels"
+    Title="GAA Perform"
+    BackgroundColor="{StaticResource PageBackground}">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="16,12" Spacing="8">
-            <Label Text="{Binding WeekLabel}" FontSize="20" FontAttributes="Bold" TextColor="#1a5c35"/>
-            <Label Text="Loading your week..." TextColor="#6b6b6b" IsVisible="{Binding IsLoading}"/>
-        </VerticalStackLayout>
-    </ScrollView>
+	<ScrollView>
+		<VerticalStackLayout Padding="16,12" Spacing="0">
 
+			<!-- Week header -->
+			<Grid ColumnDefinitions="*,Auto" Margin="0,0,0,12">
+				<Label
+                    Grid.Column="0"
+                    Text="{Binding WeekLabel}"
+                    FontSize="22"
+                    FontAttributes="Bold"
+                    TextColor="{StaticResource GaaGreen}"
+                    VerticalOptions="Center"/>
+				<Border
+                    Grid.Column="1"
+                    BackgroundColor="{StaticResource GaaGold}"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 20"
+                    Padding="10,4"
+                    IsVisible="{Binding HasMatchThisWeek}"
+                    VerticalOptions="Center">
+					<Label
+                        Text="MATCH THIS WEEK"
+                        FontSize="10"
+                        FontAttributes="Bold"
+                        TextColor="#3a2800"
+                        CharacterSpacing="0.5"/>
+				</Border>
+			</Grid>
+
+			<!-- Day cards -->
+			<CollectionView ItemsSource="{Binding WeekDays}" SelectionMode="None">
+				<CollectionView.ItemTemplate>
+					<DataTemplate x:DataType="models:TrainingDay">
+						<Border Style="{StaticResource Card}">
+							<Border.GestureRecognizers>
+								<TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:WeekViewModel}}, Path=ToggleSessionCommand}"
+                                    CommandParameter="{Binding .}"/>
+							</Border.GestureRecognizers>
+							<Grid ColumnDefinitions="44,*,28" ColumnSpacing="12">
+
+								<!-- Icon -->
+								<Border
+                                    Grid.Column="0"
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 20"
+                                    BackgroundColor="{StaticResource SurfaceBackground}"
+                                    VerticalOptions="Center">
+									<Label
+                                        Text="{Binding Type, Converter={StaticResource SessionIconConverter}}"
+                                        FontSize="18"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"/>
+								</Border>
+
+								<!-- Info -->
+								<VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+									<Label Text="{Binding DayName}" FontSize="11" TextColor="{StaticResource SecondaryText}"/>
+									<Label Text="{Binding Label}" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
+									<Label Text="{Binding Meta}" FontSize="12" TextColor="{StaticResource SecondaryText}"/>
+								</VerticalStackLayout>
+
+								<!-- Tick -->
+								<Border
+                                    Grid.Column="2"
+                                    WidthRequest="24"
+                                    HeightRequest="24"
+                                    StrokeThickness="1.5"
+                                    Stroke="{StaticResource BorderColor}"
+                                    StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="Transparent"
+                                    VerticalOptions="Center">
+									<Label
+                                        Text="✓"
+                                        FontSize="12"
+                                        TextColor="{StaticResource GaaGreen}"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        IsVisible="{Binding IsCompleted}"/>
+								</Border>
+
+							</Grid>
+						</Border>
+					</DataTemplate>
+				</CollectionView.ItemTemplate>
+			</CollectionView>
+
+			<!-- Missed session alert -->
+			<Border
+                IsVisible="{Binding ShowAlert}"
+                BackgroundColor="{StaticResource GaaGoldMuted}"
+                StrokeThickness="0.5"
+                Stroke="{StaticResource GaaGold}"
+                StrokeShape="RoundRectangle 10"
+                Padding="12,10"
+                Margin="0,4,0,0">
+				<Grid ColumnDefinitions="20,*" ColumnSpacing="8">
+					<Border
+                        Grid.Column="0"
+                        WidthRequest="18"
+                        HeightRequest="18"
+                        BackgroundColor="{StaticResource GaaGold}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 9"
+                        VerticalOptions="Start"
+                        Margin="0,1,0,0">
+						<Label Text="!" FontSize="10" FontAttributes="Bold" TextColor="#3a2800" HorizontalOptions="Center" VerticalOptions="Center"/>
+					</Border>
+					<Label
+                        Grid.Column="1"
+                        Text="{Binding MissedSessionAlert}"
+                        FontSize="13"
+                        TextColor="{StaticResource PrimaryText}"
+                        LineHeight="1.5"/>
+				</Grid>
+			</Border>
+
+		</VerticalStackLayout>
+	</ScrollView>
 </ContentPage>
