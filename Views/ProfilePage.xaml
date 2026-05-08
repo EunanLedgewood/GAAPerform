@@ -3,14 +3,89 @@
     x:Class="GAAPerform.Views.ProfilePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Profile">
+    xmlns:models="clr-namespace:GAAPerform.Models"
+    xmlns:vm="clr-namespace:GAAPerform.ViewModels"
+    Title="Profile"
+    BackgroundColor="{StaticResource PageBackground}">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="16,12" Spacing="8">
-            <Label Text="Your Profile" FontSize="20" FontAttributes="Bold" TextColor="#1a5c35"/>
-            <Label Text="{Binding SelectedPosition.Title}" FontSize="16"/>
-            <Label Text="{Binding SeasonModeTitle}" FontSize="14" TextColor="#6b6b6b"/>
-        </VerticalStackLayout>
-    </ScrollView>
+	<ScrollView>
+		<VerticalStackLayout Padding="16,12" Spacing="0">
 
+			<!-- Position selector -->
+			<Label Text="YOUR POSITION" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+			<CollectionView
+                ItemsSource="{Binding Positions}"
+                SelectionMode="None"
+                Margin="0,0,0,16">
+				<CollectionView.ItemsLayout>
+					<GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="8" VerticalItemSpacing="8"/>
+				</CollectionView.ItemsLayout>
+				<CollectionView.ItemTemplate>
+					<DataTemplate x:DataType="models:PositionPlan">
+						<Border
+                            BackgroundColor="{StaticResource CardBackground}"
+                            StrokeThickness="1.5"
+                            Stroke="{StaticResource BorderColor}"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="12,10">
+							<Border.GestureRecognizers>
+								<TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=SelectPositionCommand}"
+                                    CommandParameter="{Binding .}"/>
+							</Border.GestureRecognizers>
+							<VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+								<Label Text="{Binding Icon}" FontSize="28" HorizontalOptions="Center"/>
+								<Label Text="{Binding Title}" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+								<Label Text="{Binding FocusSummary}" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+							</VerticalStackLayout>
+						</Border>
+					</DataTemplate>
+				</CollectionView.ItemTemplate>
+			</CollectionView>
+
+			<!-- Season mode -->
+			<Label Text="SEASON MODE" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+			<Border
+                BackgroundColor="{StaticResource SurfaceBackground}"
+                StrokeThickness="0.5"
+                Stroke="{StaticResource BorderColor}"
+                StrokeShape="RoundRectangle 12"
+                Padding="4"
+                Margin="0,0,0,8">
+				<Grid ColumnDefinitions="*,*,*" ColumnSpacing="4">
+					<Button Grid.Column="0" Text="In-season"
+                        Command="{Binding SetSeasonModeCommand}" CommandParameter="InSeason"
+                        BackgroundColor="{StaticResource GaaGold}" TextColor="#3a2800"
+                        FontSize="12" FontAttributes="Bold" CornerRadius="8" HeightRequest="38" BorderWidth="0"/>
+					<Button Grid.Column="1" Text="Pre-season"
+                        Command="{Binding SetSeasonModeCommand}" CommandParameter="PreSeason"
+                        BackgroundColor="Transparent" TextColor="{StaticResource SecondaryText}"
+                        FontSize="12" CornerRadius="8" HeightRequest="38" BorderWidth="0"/>
+					<Button Grid.Column="2" Text="Off-season"
+                        Command="{Binding SetSeasonModeCommand}" CommandParameter="OffSeason"
+                        BackgroundColor="Transparent" TextColor="{StaticResource SecondaryText}"
+                        FontSize="12" CornerRadius="8" HeightRequest="38" BorderWidth="0"/>
+				</Grid>
+			</Border>
+
+			<!-- Mode description -->
+			<Border Style="{StaticResource Card}" Margin="0,0,0,16">
+				<VerticalStackLayout Spacing="4">
+					<Label Text="{Binding SeasonModeTitle}" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
+					<Label Text="{Binding SeasonModeDescription}" FontSize="13" TextColor="{StaticResource SecondaryText}" LineHeight="1.5"/>
+				</VerticalStackLayout>
+			</Border>
+
+			<!-- Position plan -->
+			<Label Text="YOUR TRAINING PLAN" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+			<Border Style="{StaticResource Card}">
+				<VerticalStackLayout Spacing="6">
+					<Label Text="{Binding SelectedPosition.Title}" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
+					<Label Text="{Binding SelectedPosition.Description}" FontSize="13" TextColor="{StaticResource SecondaryText}" LineHeight="1.5"/>
+					<Label Text="{Binding SelectedPosition.FocusSummary}" FontSize="12" TextColor="{StaticResource GaaGreen}" FontAttributes="Bold" Margin="0,4,0,0"/>
+				</VerticalStackLayout>
+			</Border>
+
+		</VerticalStackLayout>
+	</ScrollView>
 </ContentPage>
