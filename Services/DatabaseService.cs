@@ -19,6 +19,7 @@ public class DatabaseService
         _db = new SQLiteAsyncConnection(_dbPath);
         await _db.CreateTableAsync<SessionLog>();
         await _db.CreateTableAsync<UserProfile>();
+        await _db.CreateTableAsync<CalendarEvent>();
     }
 
     public async Task<UserProfile> GetProfileAsync()
@@ -83,5 +84,51 @@ public class DatabaseService
         var sessionCount = logs.Count;
         double score = (avgFeeling / 5.0 * 50) + ((5 - avgSoreness) / 5.0 * 30) + (Math.Min(sessionCount, 4) / 4.0 * 20);
         return (int)Math.Round(score);
+    }
+
+    public async Task<List<CalendarEvent>> GetEventsForMonthAsync(int year, int month)
+    {
+        await InitAsync();
+        var start = new DateTime(year, month, 1);
+        var end = start.AddMonths(1);
+        return await _db!.Table<CalendarEvent>()
+            .Where(e => e.Date >= start && e.Date < end)
+            .ToListAsync();
+    }
+
+    public async Task<List<CalendarEvent>> GetEventsForDateAsync(DateTime date)
+    {
+        await InitAsync();
+        var start = date.Date;
+        var end = start.AddDays(1);
+        return await _db!.Table<CalendarEvent>()
+            .Where(e => e.Date >= start && e.Date < end)
+            .ToListAsync();
+    }
+
+    public async Task<List<CalendarEvent>> GetUpcomingEventsAsync(int days = 30)
+    {
+        await InitAsync();
+        var start = DateTime.Today;
+        var end = start.AddDays(days);
+        return await _db!.Table<CalendarEvent>()
+            .Where(e => e.Date >= start && e.Date < end)
+            .OrderBy(e => e.Date)
+            .ToListAsync();
+    }
+
+    public async Task SaveEventAsync(CalendarEvent calEvent)
+    {
+        await InitAsync();
+        if (calEvent.Id == 0)
+            await _db!.InsertAsync(calEvent);
+        else
+            await _db!.UpdateAsync(calEvent);
+    }
+
+    public async Task DeleteEventAsync(CalendarEvent calEvent)
+    {
+        await InitAsync();
+        await _db!.DeleteAsync(calEvent);
     }
 }
