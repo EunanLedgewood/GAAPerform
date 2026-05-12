@@ -13,10 +13,6 @@ public partial class AddEventPage : ContentPage
         _vm = vm;
         _calendarVm = calendarVm;
         BindingContext = vm;
-
-        Resources.Add("BoolToActiveModeConverter", new BoolToActiveModeConverter());
-        Resources.Add("BoolToActiveModeTextConverter", new BoolToActiveModeTextConverter());
-        Resources.Add("BoolToSelectedStrokeConverter", new BoolToSelectedStrokeConverter());
     }
 
     public void SetDate(DateTime date)

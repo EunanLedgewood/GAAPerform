@@ -4,166 +4,185 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:models="clr-namespace:GAAPerform.Models"
-    xmlns:vm="clr-namespace:GAAPerform.ViewModels"
     xmlns:local="clr-namespace:GAAPerform.Views"
+    xmlns:vm="clr-namespace:GAAPerform.ViewModels"
     Title="Calendar"
     BackgroundColor="{StaticResource PageBackground}">
 
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <local:BoolToGreenConverter x:Key="BoolToGreenConverter"/>
-            <local:BoolToTodayBgConverter x:Key="BoolToTodayBgConverter"/>
-            <local:EventTypeToIconConverter x:Key="EventTypeToIconConverter"/>
-            <local:EventTypeToColorConverter x:Key="EventTypeToColorConverter"/>
-        </ResourceDictionary>
-    </ContentPage.Resources>
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<local:BoolToGreenConverter x:Key="BoolToGreenConverter"/>
+			<local:BoolToTodayBgConverter x:Key="BoolToTodayBgConverter"/>
+			<local:EventTypeToIconConverter x:Key="EventTypeToIconConverter"/>
+			<local:EventTypeToColorConverter x:Key="EventTypeToColorConverter"/>
+			<local:InverseBoolConverter x:Key="InverseBoolConverter"/>
+			<local:BoolToFontAttributesConverter x:Key="BoolToFontAttributesConverter"/>
+			<local:StringToBoolConverter x:Key="StringToBoolConverter"/>
+		</ResourceDictionary>
+	</ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
+	<Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
 
-        <!-- Month navigation -->
-        <Grid Grid.Row="0" ColumnDefinitions="48,*,48" Padding="12,12,12,8">
-            <Button Grid.Column="0" Text="‹" FontSize="22" Command="{Binding PreviousMonthCommand}"
-                BackgroundColor="Transparent" TextColor="{StaticResource GaaGreen}" FontAttributes="Bold"/>
-            <Label Grid.Column="1" Text="{Binding MonthLabel}" FontSize="18" FontAttributes="Bold"
-                TextColor="{StaticResource PrimaryText}" HorizontalOptions="Center" VerticalOptions="Center"/>
-            <Button Grid.Column="2" Text="›" FontSize="22" Command="{Binding NextMonthCommand}"
-                BackgroundColor="Transparent" TextColor="{StaticResource GaaGreen}" FontAttributes="Bold"/>
-        </Grid>
+		<!-- Month navigation -->
+		<Grid Grid.Row="0" ColumnDefinitions="48,*,48" Padding="12,12,12,8">
+			<Button Grid.Column="0" Text="‹" FontSize="22"
+                Command="{Binding PreviousMonthCommand}"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource GaaGreen}"
+                FontAttributes="Bold"/>
+			<Label Grid.Column="1"
+                Text="{Binding MonthLabel}"
+                FontSize="18" FontAttributes="Bold"
+                TextColor="{StaticResource PrimaryText}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"/>
+			<Button Grid.Column="2" Text="›" FontSize="22"
+                Command="{Binding NextMonthCommand}"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource GaaGreen}"
+                FontAttributes="Bold"/>
+		</Grid>
 
-        <!-- Day headers -->
-        <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*,*,*,*" Padding="8,0,8,4">
-            <Label Grid.Column="0" Text="Mon" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
-            <Label Grid.Column="1" Text="Tue" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
-            <Label Grid.Column="2" Text="Wed" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
-            <Label Grid.Column="3" Text="Thu" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
-            <Label Grid.Column="4" Text="Fri" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
-            <Label Grid.Column="5" Text="Sat" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
-            <Label Grid.Column="6" Text="Sun" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
-        </Grid>
+		<!-- Day headers -->
+		<Grid Grid.Row="1" ColumnDefinitions="*,*,*,*,*,*,*" Padding="4,0,4,4">
+			<Label Grid.Column="0" Text="Mon" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+			<Label Grid.Column="1" Text="Tue" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+			<Label Grid.Column="2" Text="Wed" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+			<Label Grid.Column="3" Text="Thu" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+			<Label Grid.Column="4" Text="Fri" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+			<Label Grid.Column="5" Text="Sat" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+			<Label Grid.Column="6" Text="Sun" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+		</Grid>
 
-        <!-- Calendar grid -->
-        <CollectionView
+		<!-- Calendar grid -->
+		<CollectionView
             Grid.Row="2"
             ItemsSource="{Binding CalendarDays}"
             SelectionMode="None"
-            Margin="8,0">
-            <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" Span="7" HorizontalItemSpacing="2" VerticalItemSpacing="2"/>
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Border
+            HeightRequest="290"
+            Margin="4,0">
+			<CollectionView.ItemsLayout>
+				<GridItemsLayout Orientation="Vertical" Span="7"
+                    HorizontalItemSpacing="2" VerticalItemSpacing="2"/>
+			</CollectionView.ItemsLayout>
+			<CollectionView.ItemTemplate>
+				<DataTemplate>
+					<Border
                         BackgroundColor="{Binding IsToday, Converter={StaticResource BoolToTodayBgConverter}}"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 8"
-                        Padding="2"
-                        HeightRequest="48">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer
+                        HeightRequest="40">
+						<Border.GestureRecognizers>
+							<TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CalendarViewModel}}, Path=SelectDateCommand}"
                                 CommandParameter="{Binding Date}"/>
-                        </Border.GestureRecognizers>
-                        <VerticalStackLayout Spacing="1" VerticalOptions="Center" HorizontalOptions="Center" IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBoolConverter}}">
-                            <Label
+						</Border.GestureRecognizers>
+						<VerticalStackLayout
+                            Spacing="2"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center">
+							<Label
                                 Text="{Binding DayNumber}"
-                                FontSize="14"
+                                FontSize="13"
                                 FontAttributes="{Binding IsToday, Converter={StaticResource BoolToFontAttributesConverter}}"
                                 TextColor="{Binding IsToday, Converter={StaticResource BoolToGreenConverter}}"
-                                HorizontalOptions="Center"/>
-                            <HorizontalStackLayout Spacing="2" HorizontalOptions="Center">
-                                <BoxView IsVisible="{Binding HasMatch}" WidthRequest="6" HeightRequest="6"
+                                HorizontalOptions="Center"
+                                IsVisible="{Binding IsEmpty, Converter={StaticResource InverseBoolConverter}}"/>
+							<HorizontalStackLayout Spacing="2" HorizontalOptions="Center">
+								<BoxView IsVisible="{Binding HasMatch}"
+                                    WidthRequest="5" HeightRequest="5"
                                     BackgroundColor="#c8a84b" CornerRadius="3"/>
-                                <BoxView IsVisible="{Binding HasTraining}" WidthRequest="6" HeightRequest="6"
+								<BoxView IsVisible="{Binding HasTraining}"
+                                    WidthRequest="5" HeightRequest="5"
                                     BackgroundColor="#1a5c35" CornerRadius="3"/>
-                                <BoxView IsVisible="{Binding HasOther}" WidthRequest="6" HeightRequest="6"
+								<BoxView IsVisible="{Binding HasOther}"
+                                    WidthRequest="5" HeightRequest="5"
                                     BackgroundColor="#2980b9" CornerRadius="3"/>
-                            </HorizontalStackLayout>
-                        </VerticalStackLayout>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+							</HorizontalStackLayout>
+						</VerticalStackLayout>
+					</Border>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+		</CollectionView>
 
-        <!-- Selected day events -->
-        <ScrollView Grid.Row="3" Padding="12,8">
-            <VerticalStackLayout Spacing="0">
+		<!-- Selected day panel -->
+		<ScrollView Grid.Row="3" Padding="12,8">
+			<VerticalStackLayout Spacing="0">
 
-                <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
-                    <Label
+				<Grid ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+					<Label
                         Grid.Column="0"
                         Text="{Binding SelectedDateLabel}"
-                        FontSize="15"
-                        FontAttributes="Bold"
+                        FontSize="15" FontAttributes="Bold"
                         TextColor="{StaticResource PrimaryText}"
                         VerticalOptions="Center"/>
-                    <Button
+					<Button
                         Grid.Column="1"
                         Text="+ Add"
-                        Command="{Binding AddEventCommand}"
+                        Clicked="OnAddEventTapped"
                         BackgroundColor="{StaticResource GaaGreen}"
                         TextColor="White"
-                        FontSize="12"
-                        FontAttributes="Bold"
-                        CornerRadius="8"
-                        HeightRequest="34"
+                        FontSize="12" FontAttributes="Bold"
+                        CornerRadius="8" HeightRequest="34"
                         Padding="12,0"/>
-                </Grid>
+				</Grid>
 
-                <!-- No events -->
-                <Border Style="{StaticResource Card}" IsVisible="{Binding HasSelectedDayEvents, Converter={StaticResource InverseBoolConverter}}">
-                    <Label Text="No events. Tap + Add to schedule something." FontSize="13" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
-                </Border>
+				<Border Style="{StaticResource Card}"
+                    IsVisible="{Binding HasSelectedDayEvents, Converter={StaticResource InverseBoolConverter}}">
+					<Label
+                        Text="No events. Tap + Add to schedule something."
+                        FontSize="13"
+                        TextColor="{StaticResource SecondaryText}"
+                        HorizontalOptions="Center"/>
+				</Border>
 
-                <!-- Events list -->
-                <CollectionView ItemsSource="{Binding SelectedDayEvents}" SelectionMode="None">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:CalendarEvent">
-                            <Border Style="{StaticResource Card}">
-                                <Grid ColumnDefinitions="36,*,36" ColumnSpacing="10">
-                                    <Border
+				<CollectionView ItemsSource="{Binding SelectedDayEvents}" SelectionMode="None">
+					<CollectionView.ItemTemplate>
+						<DataTemplate x:DataType="models:CalendarEvent">
+							<Border Style="{StaticResource Card}">
+								<Grid ColumnDefinitions="36,*,36" ColumnSpacing="10">
+									<Border
                                         Grid.Column="0"
-                                        WidthRequest="36"
-                                        HeightRequest="36"
+                                        WidthRequest="36" HeightRequest="36"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 18"
                                         BackgroundColor="{Binding EventType, Converter={StaticResource EventTypeToColorConverter}}"
                                         VerticalOptions="Center">
-                                        <Label
+										<Label
                                             Text="{Binding EventType, Converter={StaticResource EventTypeToIconConverter}}"
                                             FontSize="16"
                                             HorizontalOptions="Center"
                                             VerticalOptions="Center"/>
-                                    </Border>
-                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
-                                        <Label Text="{Binding Title}" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
-                                        <Label Text="{Binding Location}" FontSize="12" TextColor="{StaticResource SecondaryText}" IsVisible="{Binding Location, Converter={StaticResource StringToBoolConverter}}"/>
-                                        <Label Text="{Binding Notes}" FontSize="12" TextColor="{StaticResource SecondaryText}" IsVisible="{Binding Notes, Converter={StaticResource StringToBoolConverter}}"/>
-                                    </VerticalStackLayout>
-                                    <Button
+									</Border>
+									<VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+										<Label Text="{Binding Title}" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
+										<Label Text="{Binding Location}" FontSize="12" TextColor="{StaticResource SecondaryText}" IsVisible="{Binding Location, Converter={StaticResource StringToBoolConverter}}"/>
+										<Label Text="{Binding Notes}" FontSize="12" TextColor="{StaticResource SecondaryText}" IsVisible="{Binding Notes, Converter={StaticResource StringToBoolConverter}}"/>
+									</VerticalStackLayout>
+									<Button
                                         Grid.Column="2"
-                                        Text="✕"
-                                        FontSize="12"
+                                        Text="✕" FontSize="12"
                                         BackgroundColor="Transparent"
                                         TextColor="{StaticResource SecondaryText}"
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CalendarViewModel}}, Path=DeleteEventCommand}"
                                         CommandParameter="{Binding .}"
                                         VerticalOptions="Center"/>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+								</Grid>
+							</Border>
+						</DataTemplate>
+					</CollectionView.ItemTemplate>
+				</CollectionView>
 
-            </VerticalStackLayout>
-        </ScrollView>
+			</VerticalStackLayout>
+		</ScrollView>
 
-        <!-- Add button -->
-        <Button
+		<!-- Add button -->
+		<Button
             Grid.Row="4"
             Text="+ Add Event for This Day"
-            Command="{Binding AddEventCommand}"
+            Clicked="OnAddEventTapped"
             Style="{StaticResource GreenButton}"
             Margin="12,0,12,12"/>
 
-    </Grid>
+	</Grid>
 </ContentPage>

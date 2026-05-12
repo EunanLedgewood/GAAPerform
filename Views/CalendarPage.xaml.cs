@@ -11,20 +11,21 @@ public partial class CalendarPage : ContentPage
         InitializeComponent();
         _vm = vm;
         BindingContext = vm;
-
-        Resources.Add("BoolToGreenConverter", new BoolToGreenConverter());
-        Resources.Add("BoolToTodayBgConverter", new BoolToTodayBgConverter());
-        Resources.Add("EventTypeToIconConverter", new EventTypeToIconConverter());
-        Resources.Add("EventTypeToColorConverter", new EventTypeToColorConverter());
-        Resources.Add("InverseBoolConverter", new InverseBoolConverter());
-        Resources.Add("BoolToFontAttributesConverter", new BoolToFontAttributesConverter());
-        Resources.Add("StringToBoolConverter", new StringToBoolConverter());
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
         await _vm.LoadAsync();
+    }
+
+    private async void OnAddEventTapped(object sender, EventArgs e)
+    {
+        var addPage = IPlatformApplication.Current!.Services
+            .GetRequiredService<AddEventPage>();
+        addPage.SetDate(_vm.SelectedDate);
+        await Navigation.PushAsync(addPage);
+        await _vm.RefreshAsync();
     }
 }
 

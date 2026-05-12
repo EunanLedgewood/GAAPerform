@@ -104,14 +104,6 @@ public partial class CalendarViewModel : ObservableObject
         await BuildCalendarAsync();
     }
 
-    [RelayCommand]
-    private async Task AddEventAsync()
-    {
-        var addPage = IPlatformApplication.Current!.Services.GetRequiredService<AddEventPage>();
-        addPage.SetDate(SelectedDate);
-        await Shell.Current.Navigation.PushAsync(addPage);
-    }
-
     public async Task RefreshAsync()
     {
         await BuildCalendarAsync();

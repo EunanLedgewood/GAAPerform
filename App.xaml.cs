@@ -18,6 +18,6 @@ public partial class App : Application
             return new Window(new NavigationPage(
                 IPlatformApplication.Current!.Services.GetRequiredService<OnboardingPage>()));
 
-        return new Window(new AppShell());
+        return new Window(new NavigationPage(new AppShell()));
     }
 }
