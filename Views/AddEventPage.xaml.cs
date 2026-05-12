@@ -1,7 +1,5 @@
 ﻿using GAAPerform.ViewModels;
 
-namespace GAAPerform.Views;
-
 public partial class AddEventPage : ContentPage
 {
     private readonly AddEventViewModel _vm;
@@ -18,6 +16,13 @@ public partial class AddEventPage : ContentPage
     public void SetDate(DateTime date)
     {
         _vm.SetDate(date);
+    }
+
+    private async void OnSaveClicked(object sender, EventArgs e)
+    {
+        await _vm.SaveEventCommand.ExecuteAsync(null);
+        await _calendarVm.RefreshAsync();
+        await Navigation.PopAsync();
     }
 
     protected override async void OnDisappearing()

@@ -137,10 +137,10 @@
                     AutoSize="TextChanges"/>
             </Border>
 
-            <Button
-                Text="Save Event"
-                Command="{Binding SaveEventCommand}"
-                Style="{StaticResource GreenButton}"/>
+			<Button
+				Text="Save Event"
+				Clicked="OnSaveClicked"
+				Style="{StaticResource GreenButton}"/>
 
         </VerticalStackLayout>
     </ScrollView>
