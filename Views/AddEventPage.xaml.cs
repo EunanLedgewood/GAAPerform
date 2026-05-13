@@ -1,5 +1,7 @@
 ﻿using GAAPerform.ViewModels;
 
+namespace GAAPerform.Views;
+
 public partial class AddEventPage : ContentPage
 {
     private readonly AddEventViewModel _vm;

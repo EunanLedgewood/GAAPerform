@@ -36,7 +36,7 @@
 
 	<ItemGroup>
 		<MauiXaml Update="Views\AddEventPage.xaml">
-			<Generator>MSBuild:Compile</Generator>
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Views\CalendarPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
@@ -59,12 +59,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="Views\AddEventPage.xaml.cs">
-			<DependentUpon>AddEventPage.xaml</DependentUpon>
-		</Compile>
-		<Compile Update="Views\CalendarPage.xaml.cs">
-			<DependentUpon>CalendarPage.xaml</DependentUpon>
-		</Compile>
 		<Compile Update="Views\LogPage.xaml.cs">
 			<DependentUpon>LogPage.xaml</DependentUpon>
 		</Compile>
@@ -79,6 +73,9 @@
 		</Compile>
 		<Compile Update="Views\WeekPage.xaml.cs">
 			<DependentUpon>WeekPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\AddEventPage.xaml.cs">
+			<DependentUpon>AddEventPage.xaml</DependentUpon>
 		</Compile>
 	</ItemGroup>
 

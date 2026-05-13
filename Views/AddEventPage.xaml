@@ -7,126 +7,125 @@
     Title="Add Event"
     BackgroundColor="{StaticResource PageBackground}">
 
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <local:BoolToActiveModeConverter x:Key="BoolToActiveModeConverter"/>
-            <local:BoolToActiveModeTextConverter x:Key="BoolToActiveModeTextConverter"/>
-        </ResourceDictionary>
-    </ContentPage.Resources>
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<local:BoolToActiveModeConverter x:Key="BoolToActiveModeConverter"/>
+			<local:BoolToSelectedStrokeConverter x:Key="BoolToSelectedStrokeConverter"/>
+		</ResourceDictionary>
+	</ContentPage.Resources>
 
-    <ScrollView>
-        <VerticalStackLayout Padding="16,12" Spacing="0">
+	<ScrollView>
+		<VerticalStackLayout Padding="16,12" Spacing="0">
 
-            <!-- Event type -->
-            <Label Text="EVENT TYPE" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
-            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8" Margin="0,0,0,16">
-                <Border Grid.Row="0" Grid.Column="0"
+			<Label Text="EVENT TYPE" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+			<Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto"
+                ColumnSpacing="8" RowSpacing="8" Margin="0,0,0,16">
+
+				<Border Grid.Row="0" Grid.Column="0"
                     BackgroundColor="{Binding IsMatch, Converter={StaticResource BoolToActiveModeConverter}}"
                     StrokeThickness="1.5"
                     Stroke="{Binding IsMatch, Converter={StaticResource BoolToSelectedStrokeConverter}}"
                     StrokeShape="RoundRectangle 12"
                     Padding="12,10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectEventTypeCommand}" CommandParameter="Match"/>
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                        <Label Text="⚽" FontSize="24" HorizontalOptions="Center"/>
-                        <Label Text="Match" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
-                    </VerticalStackLayout>
-                </Border>
+					<Border.GestureRecognizers>
+						<TapGestureRecognizer Command="{Binding SelectEventTypeCommand}" CommandParameter="Match"/>
+					</Border.GestureRecognizers>
+					<VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+						<Label Text="⚽" FontSize="24" HorizontalOptions="Center"/>
+						<Label Text="Match" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+					</VerticalStackLayout>
+				</Border>
 
-                <Border Grid.Row="0" Grid.Column="1"
+				<Border Grid.Row="0" Grid.Column="1"
                     BackgroundColor="{Binding IsTraining, Converter={StaticResource BoolToActiveModeConverter}}"
                     StrokeThickness="1.5"
                     Stroke="{Binding IsTraining, Converter={StaticResource BoolToSelectedStrokeConverter}}"
                     StrokeShape="RoundRectangle 12"
                     Padding="12,10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectEventTypeCommand}" CommandParameter="Training"/>
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                        <Label Text="🏃" FontSize="24" HorizontalOptions="Center"/>
-                        <Label Text="Field Training" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
-                    </VerticalStackLayout>
-                </Border>
+					<Border.GestureRecognizers>
+						<TapGestureRecognizer Command="{Binding SelectEventTypeCommand}" CommandParameter="Training"/>
+					</Border.GestureRecognizers>
+					<VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+						<Label Text="🏃" FontSize="24" HorizontalOptions="Center"/>
+						<Label Text="Field Training" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+					</VerticalStackLayout>
+				</Border>
 
-                <Border Grid.Row="1" Grid.Column="0"
+				<Border Grid.Row="1" Grid.Column="0"
                     BackgroundColor="{Binding IsGymSession, Converter={StaticResource BoolToActiveModeConverter}}"
                     StrokeThickness="1.5"
                     Stroke="{Binding IsGymSession, Converter={StaticResource BoolToSelectedStrokeConverter}}"
                     StrokeShape="RoundRectangle 12"
                     Padding="12,10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectEventTypeCommand}" CommandParameter="GymSession"/>
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                        <Label Text="💪" FontSize="24" HorizontalOptions="Center"/>
-                        <Label Text="Gym Session" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
-                    </VerticalStackLayout>
-                </Border>
+					<Border.GestureRecognizers>
+						<TapGestureRecognizer Command="{Binding SelectEventTypeCommand}" CommandParameter="GymSession"/>
+					</Border.GestureRecognizers>
+					<VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+						<Label Text="💪" FontSize="24" HorizontalOptions="Center"/>
+						<Label Text="Gym Session" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+					</VerticalStackLayout>
+				</Border>
 
-                <Border Grid.Row="1" Grid.Column="1"
+				<Border Grid.Row="1" Grid.Column="1"
                     BackgroundColor="{Binding IsRecovery, Converter={StaticResource BoolToActiveModeConverter}}"
                     StrokeThickness="1.5"
                     Stroke="{Binding IsRecovery, Converter={StaticResource BoolToSelectedStrokeConverter}}"
                     StrokeShape="RoundRectangle 12"
                     Padding="12,10">
-                    <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SelectEventTypeCommand}" CommandParameter="Recovery"/>
-                    </Border.GestureRecognizers>
-                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
-                        <Label Text="🛌" FontSize="24" HorizontalOptions="Center"/>
-                        <Label Text="Recovery" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
-                    </VerticalStackLayout>
-                </Border>
-            </Grid>
+					<Border.GestureRecognizers>
+						<TapGestureRecognizer Command="{Binding SelectEventTypeCommand}" CommandParameter="Recovery"/>
+					</Border.GestureRecognizers>
+					<VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+						<Label Text="🛌" FontSize="24" HorizontalOptions="Center"/>
+						<Label Text="Recovery" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+					</VerticalStackLayout>
+				</Border>
 
-            <!-- Title -->
-            <Label Text="TITLE" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
-            <Border
+			</Grid>
+
+			<Label Text="TITLE" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+			<Border
                 BackgroundColor="{StaticResource CardBackground}"
                 StrokeThickness="0.5"
                 Stroke="{StaticResource BorderColor}"
                 StrokeShape="RoundRectangle 10"
                 Padding="12,4"
                 Margin="0,0,0,16">
-                <Entry
+				<Entry
                     Text="{Binding Title}"
                     Placeholder="e.g. Match vs Clonard GAC"
                     FontSize="15"
                     PlaceholderColor="{StaticResource SecondaryText}"
                     TextColor="{StaticResource PrimaryText}"
                     BackgroundColor="Transparent"/>
-            </Border>
+			</Border>
 
-            <!-- Location -->
-            <Label Text="LOCATION (optional)" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
-            <Border
+			<Label Text="LOCATION (optional)" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+			<Border
                 BackgroundColor="{StaticResource CardBackground}"
                 StrokeThickness="0.5"
                 Stroke="{StaticResource BorderColor}"
                 StrokeShape="RoundRectangle 10"
                 Padding="12,4"
                 Margin="0,0,0,16">
-                <Entry
+				<Entry
                     Text="{Binding Location}"
                     Placeholder="e.g. Corrigan Park"
                     FontSize="15"
                     PlaceholderColor="{StaticResource SecondaryText}"
                     TextColor="{StaticResource PrimaryText}"
                     BackgroundColor="Transparent"/>
-            </Border>
+			</Border>
 
-            <!-- Notes -->
-            <Label Text="NOTES (optional)" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
-            <Border
+			<Label Text="NOTES (optional)" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+			<Border
                 BackgroundColor="{StaticResource CardBackground}"
                 StrokeThickness="0.5"
                 Stroke="{StaticResource BorderColor}"
                 StrokeShape="RoundRectangle 10"
                 Padding="12,8"
                 Margin="0,0,0,24">
-                <Editor
+				<Editor
                     Text="{Binding Notes}"
                     Placeholder="Any extra details..."
                     FontSize="15"
@@ -135,13 +134,13 @@
                     BackgroundColor="Transparent"
                     HeightRequest="80"
                     AutoSize="TextChanges"/>
-            </Border>
+			</Border>
 
 			<Button
-				Text="Save Event"
-				Clicked="OnSaveClicked"
-				Style="{StaticResource GreenButton}"/>
+                Text="Save Event"
+                Clicked="OnSaveClicked"
+                Style="{StaticResource GreenButton}"/>
 
-        </VerticalStackLayout>
-    </ScrollView>
+		</VerticalStackLayout>
+	</ScrollView>
 </ContentPage>

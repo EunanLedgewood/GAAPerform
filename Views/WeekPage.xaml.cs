@@ -21,22 +21,3 @@ public partial class WeekPage : ContentPage
         await _vm.LoadAsync();
     }
 }
-
-public class SessionIconConverter : IValueConverter
-{
-    public object Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
-    {
-        return value is SessionType type ? type switch
-        {
-            SessionType.Match => "⚽",
-            SessionType.Strength => "💪",
-            SessionType.Field => "🏃",
-            SessionType.Recovery => "🛌",
-            SessionType.Activation => "⚡",
-            _ => "—"
-        } : "—";
-    }
-
-    public object ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
-        => throw new NotImplementedException();
-}
