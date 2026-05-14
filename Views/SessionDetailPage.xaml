@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GAAPerform.Views.SessionDetailPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:GAAPerform.Models"
+    xmlns:local="clr-namespace:GAAPerform.Views"
+    Title="{Binding SessionTitle}"
+    BackgroundColor="{StaticResource PageBackground}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:StringToBoolConverter x:Key="StringToBoolConverter"/>
+            <local:InverseBoolConverter x:Key="InverseBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,12" Spacing="0">
+
+            <!-- Header card -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <VerticalStackLayout Spacing="8">
+
+                    <Grid ColumnDefinitions="48,*">
+                        <Label
+                            Grid.Column="0"
+                            Text="{Binding SessionIcon}"
+                            FontSize="36"
+                            VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label
+                                Text="{Binding SessionTitle}"
+                                FontSize="20"
+                                FontAttributes="Bold"
+                                TextColor="{StaticResource PrimaryText}"/>
+                            <Label
+                                Text="{Binding SessionDescription}"
+                                FontSize="13"
+                                TextColor="{StaticResource SecondaryText}"
+                                LineHeight="1.4"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Stats row -->
+                    <Grid ColumnDefinitions="*,*" Margin="0,4,0,0"
+                        IsVisible="{Binding IsRestDay, Converter={StaticResource InverseBoolConverter}}">
+                        <Border
+                            Grid.Column="0"
+                            BackgroundColor="{StaticResource SurfaceBackground}"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="10,8"
+                            Margin="0,0,4,0">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="DURATION" FontSize="10" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5"/>
+                                <Label Text="{Binding SessionDuration}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource GaaGreen}"/>
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border
+                            Grid.Column="1"
+                            BackgroundColor="{StaticResource SurfaceBackground}"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="10,8"
+                            Margin="4,0,0,0">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="INTENSITY" FontSize="10" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5"/>
+                                <Label Text="{Binding SessionIntensity}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource GaaGreen}"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Exercises -->
+            <Label
+                Text="EXERCISES"
+                Style="{StaticResource SectionTitle}"
+                Margin="0,0,0,8"
+                IsVisible="{Binding HasExercises}"/>
+
+            <CollectionView
+                ItemsSource="{Binding Exercises}"
+                SelectionMode="None"
+                IsVisible="{Binding HasExercises}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Exercise">
+                        <Border Style="{StaticResource Card}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                    <Label
+                                        Text="{Binding Name}"
+                                        FontSize="15"
+                                        FontAttributes="Bold"
+                                        TextColor="{StaticResource PrimaryText}"/>
+                                    <HorizontalStackLayout Spacing="12">
+                                        <Label
+                                            Text="{Binding Duration}"
+                                            FontSize="12"
+                                            TextColor="{StaticResource SecondaryText}"
+                                            IsVisible="{Binding Duration, Converter={StaticResource StringToBoolConverter}}"/>
+                                        <Label
+                                            Text="{Binding Sets, StringFormat='{0} sets'}"
+                                            FontSize="12"
+                                            TextColor="{StaticResource SecondaryText}"
+                                            IsVisible="{Binding Sets, Converter={StaticResource StringToBoolConverter}}"/>
+                                        <Label
+                                            Text="{Binding Reps, StringFormat='× {0}'}"
+                                            FontSize="12"
+                                            TextColor="{StaticResource SecondaryText}"
+                                            IsVisible="{Binding Reps, Converter={StaticResource StringToBoolConverter}}"/>
+                                    </HorizontalStackLayout>
+                                    <Label
+                                        Text="{Binding Notes}"
+                                        FontSize="12"
+                                        TextColor="{StaticResource SecondaryText}"
+                                        IsVisible="{Binding Notes, Converter={StaticResource StringToBoolConverter}}"
+                                        LineHeight="1.4"/>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Coach notes -->
+            <Label
+                Text="COACH NOTES"
+                Style="{StaticResource SectionTitle}"
+                Margin="0,12,0,8"
+                IsVisible="{Binding HasCoachNotes}"/>
+
+            <CollectionView
+                ItemsSource="{Binding CoachNotes}"
+                SelectionMode="None"
+                IsVisible="{Binding HasCoachNotes}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}">
+                            <Grid ColumnDefinitions="20,*" ColumnSpacing="8">
+                                <Label
+                                    Grid.Column="0"
+                                    Text="💡"
+                                    FontSize="14"
+                                    VerticalOptions="Start"
+                                    Margin="0,2,0,0"/>
+                                <Label
+                                    Grid.Column="1"
+                                    Text="{Binding .}"
+                                    FontSize="13"
+                                    TextColor="{StaticResource PrimaryText}"
+                                    LineHeight="1.5"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Rest day message -->
+            <Border Style="{StaticResource Card}" IsVisible="{Binding IsRestDay}" Margin="0,16,0,0">
+                <VerticalStackLayout Spacing="8" HorizontalOptions="Center" Padding="0,16">
+                    <Label Text="😴" FontSize="48" HorizontalOptions="Center"/>
+                    <Label Text="Rest Day" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+                    <Label Text="Rest is part of training. Let your body recover." FontSize="13" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -53,6 +53,9 @@
 		<MauiXaml Update="Views\ReadinessPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\SessionDetailPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\WeekPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>

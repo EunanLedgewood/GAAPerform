@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using GAAPerform.Models;
 using GAAPerform.Services;
+using GAAPerform.Views;
 using System.Collections.ObjectModel;
 
 namespace GAAPerform.ViewModels;
@@ -62,16 +63,12 @@ public partial class WeekViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ToggleSession(TrainingDay day)
+    private async Task ToggleSession(TrainingDay day)
     {
-        if (day.Type == SessionType.Rest || day.Type == SessionType.Match) return;
-        day.IsCompleted = !day.IsCompleted;
-        var index = WeekDays.IndexOf(day);
-        if (index >= 0)
-        {
-            WeekDays.RemoveAt(index);
-            WeekDays.Insert(index, day);
-        }
+        var detailVm = IPlatformApplication.Current!.Services
+            .GetRequiredService<SessionDetailViewModel>();
+        var detailPage = new SessionDetailPage(detailVm, day);
+        await Shell.Current.Navigation.PushAsync(detailPage);
     }
 
     private static DateTime GetNextSunday()
