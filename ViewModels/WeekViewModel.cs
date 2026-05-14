@@ -38,14 +38,60 @@ public partial class WeekViewModel : ObservableObject
     public async Task LoadAsync()
     {
         var profile = await _db.GetProfileAsync();
-        var matchDate = profile.NextMatchDate ?? GetNextSunday();
-        var monday = matchDate.AddDays(-(int)matchDate.DayOfWeek + 1);
+
+        // Find the current week's Monday
+        var today = DateTime.Today;
+        var monday = today.AddDays(-(int)today.DayOfWeek + (int)DayOfWeek.Monday);
+        if (today.DayOfWeek == DayOfWeek.Sunday)
+            monday = today.AddDays(-6);
+
+        var sunday = monday.AddDays(6);
         WeekLabel = $"Week of {monday:dd MMM}";
-        HasMatchThisWeek = true;
+
+        // Look for a match in the calendar this week
+        var weekEvents = await _db.GetEventsForWeekAsync(monday, sunday);
+        var matchEvent = weekEvents.FirstOrDefault(e => e.EventType == Models.EventType.Match);
+
+        DateTime matchDate;
+        bool hasCalendarMatch = matchEvent is not null;
+
+        if (hasCalendarMatch)
+        {
+            matchDate = matchEvent!.Date;
+            HasMatchThisWeek = true;
+        }
+        else
+        {
+            // Fall back to next Sunday if no match in calendar
+            matchDate = sunday;
+            HasMatchThisWeek = false;
+        }
 
         var plan = _planService.GenerateWeekPlan(matchDate, profile.Position, profile.SeasonMode);
 
-        var today = DateTime.Today;
+        // Overlay any calendar events onto the plan
+        foreach (var day in plan)
+        {
+            var dayEvents = weekEvents.Where(e => e.Date.Date == day.Date.Date).ToList();
+            if (dayEvents.Any())
+            {
+                var firstEvent = dayEvents.First();
+                if (firstEvent.EventType != Models.EventType.Match)
+                {
+                    day.Label = firstEvent.Title;
+                    day.Meta = firstEvent.Notes.Length > 0 ? firstEvent.Notes : day.Meta;
+                    day.Type = firstEvent.EventType switch
+                    {
+                        Models.EventType.Training => SessionType.Field,
+                        Models.EventType.GymSession => SessionType.Strength,
+                        Models.EventType.Recovery => SessionType.Recovery,
+                        _ => day.Type
+                    };
+                }
+            }
+        }
+
+        // Check for missed sessions
         bool foundMissed = false;
         for (int i = 0; i < plan.Count; i++)
         {

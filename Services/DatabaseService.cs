@@ -131,4 +131,15 @@ public class DatabaseService
         await InitAsync();
         await _db!.DeleteAsync(calEvent);
     }
+
+    public async Task<List<CalendarEvent>> GetEventsForWeekAsync(DateTime monday, DateTime sunday)
+    {
+        await InitAsync();
+        var start = monday.Date;
+        var end = sunday.Date.AddDays(1);
+        return await _db!.Table<CalendarEvent>()
+            .Where(e => e.Date >= start && e.Date < end)
+            .OrderBy(e => e.Date)
+            .ToListAsync();
+    }
 }
