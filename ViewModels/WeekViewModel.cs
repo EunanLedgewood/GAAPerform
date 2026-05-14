@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using GAAPerform.Models;
 using GAAPerform.Services;
-using GAAPerform.Views;
 using System.Collections.ObjectModel;
 
 namespace GAAPerform.ViewModels;
@@ -26,6 +25,9 @@ public partial class WeekViewModel : ObservableObject
 
     [ObservableProperty]
     private bool showAlert;
+
+    [ObservableProperty]
+    private TrainingDay? selectedDay;
 
     public WeekViewModel(DatabaseService db, TrainingPlanService planService)
     {
@@ -63,12 +65,9 @@ public partial class WeekViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task ToggleSession(TrainingDay day)
+    private void ToggleSession(TrainingDay day)
     {
-        var detailVm = IPlatformApplication.Current!.Services
-            .GetRequiredService<SessionDetailViewModel>();
-        var detailPage = new SessionDetailPage(detailVm, day);
-        await Shell.Current.Navigation.PushAsync(detailPage);
+        SelectedDay = day;
     }
 
     private static DateTime GetNextSunday()
