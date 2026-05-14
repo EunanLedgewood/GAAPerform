@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GAAPerform.Views.WeeklyReportPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:GAAPerform.Views"
+    xmlns:vm="clr-namespace:GAAPerform.ViewModels"
+    Title="Weekly Report"
+    BackgroundColor="{StaticResource PageBackground}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:InverseBoolConverter x:Key="InverseBoolConverter"/>
+            <local:StringToBoolConverter x:Key="StringToBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,12" Spacing="0">
+
+            <!-- Week label -->
+            <Label
+                Text="{Binding WeekLabel}"
+                FontSize="13"
+                TextColor="{StaticResource SecondaryText}"
+                Margin="0,0,0,4"/>
+
+            <!-- Readiness header card -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                            <Label Text="{Binding ReadinessLabel}" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
+                            <Label Text="{Binding EncouragementMessage}" FontSize="13" TextColor="{StaticResource SecondaryText}" LineHeight="1.5"/>
+                        </VerticalStackLayout>
+                        <Border
+                            Grid.Column="1"
+                            WidthRequest="56"
+                            HeightRequest="56"
+                            StrokeThickness="4"
+                            Stroke="{StaticResource GaaGreen}"
+                            StrokeShape="RoundRectangle 28"
+                            BackgroundColor="{StaticResource SurfaceBackground}"
+                            VerticalOptions="Center">
+                            <Label
+                                Text="{Binding ReadinessScore}"
+                                FontSize="18"
+                                FontAttributes="Bold"
+                                TextColor="{StaticResource GaaGreen}"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"/>
+                        </Border>
+                    </Grid>
+
+                    <!-- Streak -->
+                    <Label
+                        Text="{Binding StreakMessage}"
+                        FontSize="13"
+                        FontAttributes="Bold"
+                        TextColor="{StaticResource GaaGreen}"
+                        IsVisible="{Binding StreakMessage, Converter={StaticResource StringToBoolConverter}}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Sessions completed -->
+            <Label Text="SESSIONS THIS WEEK" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label Grid.Column="0" FontSize="13" TextColor="{StaticResource SecondaryText}" VerticalOptions="Center">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding SessionsCompleted}" FontSize="28" FontAttributes="Bold" TextColor="#1a5c35"/>
+                                    <Span Text=" / " FontSize="16" TextColor="#6b6b6b"/>
+                                    <Span Text="{Binding SessionsTarget}" FontSize="16" TextColor="#6b6b6b"/>
+                                    <Span Text=" sessions" FontSize="13" TextColor="#6b6b6b"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label
+                            Grid.Column="1"
+                            FontSize="22"
+                            VerticalOptions="Center">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{Binding SessionsCompleted, StringFormat='{0}'}" FontSize="13" TextColor="#6b6b6b"/>
+                                    <Span Text="✓" FontSize="22" TextColor="#1a5c35"/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </Grid>
+                    <ProgressBar
+                        Progress="{Binding SessionCompletionRate}"
+                        ProgressColor="{StaticResource GaaGreen}"
+                        BackgroundColor="{StaticResource SurfaceBackground}"
+                        HeightRequest="6"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Metrics -->
+            <Label Text="WEEKLY AVERAGES" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,0,0,16">
+                <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0" BackgroundColor="{StaticResource SurfaceBackground}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="{Binding AverageFeeling}" FontSize="28" FontAttributes="Bold" TextColor="{StaticResource GaaGreen}"/>
+                        <Label Text="AVG FEELING" FontSize="11" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5"/>
+                        <Label Text="Out of 5" FontSize="12" TextColor="{StaticResource SecondaryText}"/>
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource Card}" Margin="0" BackgroundColor="{StaticResource SurfaceBackground}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="{Binding AverageSoreness}" FontSize="28" FontAttributes="Bold" TextColor="{StaticResource GaaGreen}"/>
+                        <Label Text="AVG SORENESS" FontSize="11" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5"/>
+                        <Label Text="Out of 5" FontSize="12" TextColor="{StaticResource SecondaryText}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Weekly load chart -->
+            <Label Text="TRAINING LOAD" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <VerticalStackLayout Spacing="8">
+                    <CollectionView
+                        ItemsSource="{Binding WeeklyLoad}"
+                        SelectionMode="None"
+                        HeightRequest="120">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="8"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <VerticalStackLayout
+                                    Spacing="4"
+                                    WidthRequest="36"
+                                    VerticalOptions="End"
+                                    HorizontalOptions="Center">
+                                    <BoxView
+                                        HeightRequest="{Binding BarHeight}"
+                                        WidthRequest="20"
+                                        BackgroundColor="{Binding HasSession, Converter={StaticResource BarColorConverter}}"
+                                        CornerRadius="4"
+                                        VerticalOptions="End"
+                                        HorizontalOptions="Center"/>
+                                    <Label
+                                        Text="{Binding DayName}"
+                                        FontSize="10"
+                                        TextColor="{StaticResource SecondaryText}"
+                                        HorizontalOptions="Center"/>
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- Legend -->
+                    <HorizontalStackLayout Spacing="16" HorizontalOptions="Center">
+                        <HorizontalStackLayout Spacing="4">
+                            <BoxView WidthRequest="10" HeightRequest="10" BackgroundColor="{StaticResource GaaGreen}" CornerRadius="2" VerticalOptions="Center"/>
+                            <Label Text="Session logged" FontSize="11" TextColor="{StaticResource SecondaryText}" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="4">
+                            <BoxView WidthRequest="10" HeightRequest="10" BackgroundColor="{StaticResource BorderColor}" CornerRadius="2" VerticalOptions="Center"/>
+                            <Label Text="No session" FontSize="11" TextColor="{StaticResource SecondaryText}" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- No data message -->
+            <Border Style="{StaticResource Card}" IsVisible="{Binding HasData, Converter={StaticResource InverseBoolConverter}}">
+                <VerticalStackLayout Spacing="8" Padding="0,8" HorizontalOptions="Center">
+                    <Label Text="📋" FontSize="36" HorizontalOptions="Center"/>
+                    <Label Text="No sessions logged this week yet." FontSize="14" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+                    <Label Text="Head to the Log tab after your next session." FontSize="13" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

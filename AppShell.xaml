@@ -27,6 +27,10 @@
             Title="Calendar"
             ContentTemplate="{DataTemplate views:CalendarPage}"
             Route="CalendarPage"/>
+        <ShellContent
+            Title="Report"
+            ContentTemplate="{DataTemplate views:WeeklyReportPage}"
+            Route="WeeklyReportPage"/>
     </TabBar>
 
 </Shell>
