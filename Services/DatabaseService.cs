@@ -19,6 +19,9 @@ public class DatabaseService
         _db = new SQLiteAsyncConnection(_dbPath);
         await _db.CreateTableAsync<SessionLog>();
         await _db.CreateTableAsync<UserProfile>();
+
+        // Drop and recreate CalendarEvent to ensure schema is correct
+        await _db.DropTableAsync<CalendarEvent>();
         await _db.CreateTableAsync<CalendarEvent>();
     }
 
@@ -89,21 +92,37 @@ public class DatabaseService
     public async Task<List<CalendarEvent>> GetEventsForMonthAsync(int year, int month)
     {
         await InitAsync();
-        var start = new DateTime(year, month, 1);
-        var end = start.AddMonths(1);
-        return await _db!.Table<CalendarEvent>()
-            .Where(e => e.Date >= start && e.Date < end)
-            .ToListAsync();
+        try
+        {
+            var start = new DateTime(year, month, 1);
+            var end = start.AddMonths(1);
+            return await _db!.Table<CalendarEvent>()
+                .Where(e => e.Date >= start && e.Date < end)
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"GetEventsForMonthAsync error: {ex}");
+            return new List<CalendarEvent>();
+        }
     }
 
     public async Task<List<CalendarEvent>> GetEventsForDateAsync(DateTime date)
     {
         await InitAsync();
-        var start = date.Date;
-        var end = start.AddDays(1);
-        return await _db!.Table<CalendarEvent>()
-            .Where(e => e.Date >= start && e.Date < end)
-            .ToListAsync();
+        try
+        {
+            var start = date.Date;
+            var end = start.AddDays(1);
+            return await _db!.Table<CalendarEvent>()
+                .Where(e => e.Date >= start && e.Date < end)
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"GetEventsForDateAsync error: {ex}");
+            return new List<CalendarEvent>();
+        }
     }
 
     public async Task<List<CalendarEvent>> GetUpcomingEventsAsync(int days = 30)
