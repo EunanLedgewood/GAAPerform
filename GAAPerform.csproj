@@ -86,4 +86,7 @@
 			<DependentUpon>AddEventPage.xaml</DependentUpon>
 		</Compile>
 	</ItemGroup>
+	<ItemGroup>
+		<MauiAsset Include="appsettings.json" LogicalName="appsettings.json"/>
+	</ItemGroup>
 </Project>

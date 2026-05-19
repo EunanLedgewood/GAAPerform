@@ -1,22 +1,21 @@
 ﻿using Firebase.Auth;
 using Firebase.Auth.Providers;
-using Firebase.Auth.Repository;
 
 namespace GAAPerform.Auth;
 
 public class FirebaseAuthService
 {
     private readonly FirebaseAuthClient _client;
+    private static AppSettings? _settings;
 
-    public static string ApiKey => "AIzaSyAYpKKMXpJugs66xWyhIoEFIic4sYsGonI";
-    public static string ProjectId => "gaaperform";
+    private static AppSettings Settings => _settings ??= AppSettings.Load();
 
     public FirebaseAuthService()
     {
         var config = new FirebaseAuthConfig
         {
-            ApiKey = ApiKey,
-            AuthDomain = "gaaperform.firebaseapp.com",
+            ApiKey = Settings.Firebase.ApiKey,
+            AuthDomain = Settings.Firebase.AuthDomain,
             Providers = new FirebaseAuthProvider[]
             {
                 new EmailProvider()
@@ -28,6 +27,12 @@ public class FirebaseAuthService
     public bool IsLoggedIn => _client.User is not null;
     public string? CurrentUserId => _client.User?.Uid;
     public string? CurrentUserEmail => _client.User?.Info?.Email;
+
+    public async Task<string> GetTokenAsync()
+    {
+        var token = await _client.User.GetIdTokenAsync();
+        return token;
+    }
 
     public async Task<(bool success, string? error)> RegisterAsync(string email, string password)
     {

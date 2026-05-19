@@ -8,7 +8,7 @@ public class FirestoreService
     private FirebaseClient GetClient(string token)
     {
         return new FirebaseClient(
-            "https://gaaperform-default-rtdb.europe-west1.firebasedatabase.app/",
+            AppSettings.Load().Firebase.DatabaseUrl,
             new FirebaseOptions
             {
                 AuthTokenAsyncFactory = () => Task.FromResult(token)
