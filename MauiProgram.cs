@@ -2,6 +2,7 @@
 using GAAPerform.ViewModels;
 using GAAPerform.Views;
 using Microsoft.Extensions.Logging;
+using GAAPerform.Auth;
 
 namespace GAAPerform;
 
@@ -23,6 +24,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<DatabaseService>();
         builder.Services.AddSingleton<TrainingPlanService>();
         builder.Services.AddSingleton<SessionLibraryService>();
+        builder.Services.AddSingleton<FirebaseAuthService>();
+        builder.Services.AddSingleton<FirestoreService>();
 
         // ViewModels
         builder.Services.AddTransient<WeekViewModel>();
