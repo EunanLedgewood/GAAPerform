@@ -19,9 +19,6 @@ public class DatabaseService
         _db = new SQLiteAsyncConnection(_dbPath);
         await _db.CreateTableAsync<SessionLog>();
         await _db.CreateTableAsync<UserProfile>();
-
-        // Drop and recreate CalendarEvent to ensure schema is correct
-        await _db.DropTableAsync<CalendarEvent>();
         await _db.CreateTableAsync<CalendarEvent>();
     }
 
