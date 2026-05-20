@@ -1,23 +1,26 @@
-﻿using GAAPerform.Views;
-using GAAPerform.Services;
+﻿using GAAPerform.Auth;
+using GAAPerform.Views;
+using GAAPerform.ViewModels;
 
 namespace GAAPerform;
 
 public partial class App : Application
 {
-    public App()
+    private readonly FirebaseAuthService _auth;
+
+    public App(FirebaseAuthService auth)
     {
         InitializeComponent();
+        _auth = auth;
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        bool hasOnboarded = Preferences.Get("has_onboarded", false);
+        if (_auth.IsLoggedIn)
+            return new Window(new NavigationPage(new AppShell()));
 
-        if (!hasOnboarded)
-            return new Window(new NavigationPage(
-                IPlatformApplication.Current!.Services.GetRequiredService<OnboardingPage>()));
-
-        return new Window(new NavigationPage(new AppShell()));
+        var loginPage = IPlatformApplication.Current!.Services
+            .GetRequiredService<LoginPage>();
+        return new Window(new NavigationPage(loginPage));
     }
 }

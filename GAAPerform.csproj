@@ -43,6 +43,9 @@
 		<MauiXaml Update="Views\CalendarPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\LoginPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\LogPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -85,8 +88,11 @@
 		<Compile Update="Views\AddEventPage.xaml.cs">
 			<DependentUpon>AddEventPage.xaml</DependentUpon>
 		</Compile>
+		<Compile Update="Views\LoginPage.xaml.cs">
+			<DependentUpon>LoginPage.xaml</DependentUpon>
+		</Compile>
 	</ItemGroup>
 	<ItemGroup>
-		<MauiAsset Include="appsettings.json" LogicalName="appsettings.json"/>
+		<MauiAsset Include="appsettings.json" LogicalName="appsettings.json" />
 	</ItemGroup>
 </Project>

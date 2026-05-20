@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GAAPerform.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:GAAPerform.Views"
+    BackgroundColor="{StaticResource PageBackground}"
+    Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:BoolToActiveModeConverter x:Key="BoolToActiveModeConverter"/>
+            <local:BoolToSelectedStrokeConverter x:Key="BoolToSelectedStrokeConverter"/>
+            <local:InverseBoolConverter x:Key="InverseBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,48" Spacing="0">
+
+            <!-- Header -->
+            <Label
+                Text="GAA PERFORM"
+                FontSize="36"
+                FontAttributes="Bold"
+                TextColor="{StaticResource GaaGreen}"
+                CharacterSpacing="2"
+                HorizontalOptions="Center"
+                Margin="0,0,0,8"/>
+
+            <Label
+                Text="Your GAA training system"
+                FontSize="16"
+                TextColor="{StaticResource SecondaryText}"
+                HorizontalOptions="Center"
+                Margin="0,0,0,48"/>
+
+            <!-- Login form -->
+            <VerticalStackLayout IsVisible="{Binding IsLoginMode}" Spacing="0">
+
+                <Label Text="EMAIL" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+                <Border
+                    BackgroundColor="{StaticResource CardBackground}"
+                    StrokeThickness="0.5"
+                    Stroke="{StaticResource BorderColor}"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="12,4"
+                    Margin="0,0,0,16">
+                    <Entry
+                        Text="{Binding Email}"
+                        Placeholder="your@email.com"
+                        FontSize="15"
+                        Keyboard="Email"
+                        PlaceholderColor="{StaticResource SecondaryText}"
+                        TextColor="{StaticResource PrimaryText}"
+                        BackgroundColor="Transparent"/>
+                </Border>
+
+                <Label Text="PASSWORD" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+                <Border
+                    BackgroundColor="{StaticResource CardBackground}"
+                    StrokeThickness="0.5"
+                    Stroke="{StaticResource BorderColor}"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="12,4"
+                    Margin="0,0,0,24">
+                    <Entry
+                        Text="{Binding Password}"
+                        Placeholder="Password"
+                        FontSize="15"
+                        IsPassword="True"
+                        PlaceholderColor="{StaticResource SecondaryText}"
+                        TextColor="{StaticResource PrimaryText}"
+                        BackgroundColor="Transparent"/>
+                </Border>
+
+                <!-- Error message -->
+                <Border
+                    BackgroundColor="#fdecea"
+                    StrokeThickness="0.5"
+                    Stroke="#f44336"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="12,8"
+                    Margin="0,0,0,16"
+                    IsVisible="{Binding HasError}">
+                    <Label Text="{Binding ErrorMessage}" FontSize="13" TextColor="#c62828"/>
+                </Border>
+
+                <Button
+                    Text="Login"
+                    Command="{Binding LoginCommand}"
+                    Style="{StaticResource GreenButton}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
+
+                <ActivityIndicator
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}"
+                    Color="{StaticResource GaaGreen}"
+                    Margin="0,12,0,0"
+                    HorizontalOptions="Center"/>
+
+            </VerticalStackLayout>
+
+            <!-- Register form -->
+            <VerticalStackLayout IsVisible="{Binding IsRegisterMode}" Spacing="0">
+
+                <Label Text="EMAIL" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+                <Border
+                    BackgroundColor="{StaticResource CardBackground}"
+                    StrokeThickness="0.5"
+                    Stroke="{StaticResource BorderColor}"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="12,4"
+                    Margin="0,0,0,16">
+                    <Entry
+                        Text="{Binding Email}"
+                        Placeholder="your@email.com"
+                        FontSize="15"
+                        Keyboard="Email"
+                        PlaceholderColor="{StaticResource SecondaryText}"
+                        TextColor="{StaticResource PrimaryText}"
+                        BackgroundColor="Transparent"/>
+                </Border>
+
+                <Label Text="PASSWORD" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+                <Border
+                    BackgroundColor="{StaticResource CardBackground}"
+                    StrokeThickness="0.5"
+                    Stroke="{StaticResource BorderColor}"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="12,4"
+                    Margin="0,0,0,16">
+                    <Entry
+                        Text="{Binding Password}"
+                        Placeholder="Password (min 6 characters)"
+                        FontSize="15"
+                        IsPassword="True"
+                        PlaceholderColor="{StaticResource SecondaryText}"
+                        TextColor="{StaticResource PrimaryText}"
+                        BackgroundColor="Transparent"/>
+                </Border>
+
+                <Label Text="CONFIRM PASSWORD" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+                <Border
+                    BackgroundColor="{StaticResource CardBackground}"
+                    StrokeThickness="0.5"
+                    Stroke="{StaticResource BorderColor}"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="12,4"
+                    Margin="0,0,0,24">
+                    <Entry
+                        Text="{Binding ConfirmPassword}"
+                        Placeholder="Confirm password"
+                        FontSize="15"
+                        IsPassword="True"
+                        PlaceholderColor="{StaticResource SecondaryText}"
+                        TextColor="{StaticResource PrimaryText}"
+                        BackgroundColor="Transparent"/>
+                </Border>
+
+                <!-- Role selection -->
+                <Label Text="I AM A" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,0,0,24">
+                    <Border Grid.Column="0"
+                        BackgroundColor="{Binding IsPlayer, Converter={StaticResource BoolToActiveModeConverter}}"
+                        StrokeThickness="1.5"
+                        Stroke="{Binding IsPlayer, Converter={StaticResource BoolToSelectedStrokeConverter}}"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="12,16">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectRoleCommand}" CommandParameter="Player"/>
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="🏃" FontSize="28" HorizontalOptions="Center"/>
+                            <Label Text="Player" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Column="1"
+                        BackgroundColor="{Binding IsCoach, Converter={StaticResource BoolToActiveModeConverter}}"
+                        StrokeThickness="1.5"
+                        Stroke="{Binding IsCoach, Converter={StaticResource BoolToSelectedStrokeConverter}}"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="12,16">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SelectRoleCommand}" CommandParameter="Coach"/>
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="📋" FontSize="28" HorizontalOptions="Center"/>
+                            <Label Text="Coach" FontSize="14" FontAttributes="Bold" HorizontalOptions="Center" TextColor="{StaticResource PrimaryText}"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <!-- Error message -->
+                <Border
+                    BackgroundColor="#fdecea"
+                    StrokeThickness="0.5"
+                    Stroke="#f44336"
+                    StrokeShape="RoundRectangle 8"
+                    Padding="12,8"
+                    Margin="0,0,0,16"
+                    IsVisible="{Binding HasError}">
+                    <Label Text="{Binding ErrorMessage}" FontSize="13" TextColor="#c62828"/>
+                </Border>
+
+                <Button
+                    Text="Create Account"
+                    Command="{Binding RegisterCommand}"
+                    Style="{StaticResource GreenButton}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
+
+                <ActivityIndicator
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}"
+                    Color="{StaticResource GaaGreen}"
+                    Margin="0,12,0,0"
+                    HorizontalOptions="Center"/>
+
+            </VerticalStackLayout>
+
+            <!-- Toggle login/register -->
+            <Button
+                Text="{Binding ToggleModeText}"
+                Command="{Binding ToggleModeCommand}"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource GaaGreen}"
+                FontSize="13"
+                Margin="0,16,0,0"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
