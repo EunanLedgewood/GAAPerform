@@ -1,5 +1,6 @@
-﻿using SQLite;
+﻿using GAAPerform.Auth;
 using GAAPerform.Models;
+using SQLite;
 
 namespace GAAPerform.Services;
 
@@ -157,5 +158,35 @@ public class DatabaseService
             .Where(e => e.Date >= start && e.Date < end)
             .OrderBy(e => e.Date)
             .ToListAsync();
+    }
+
+    public async Task SyncCoachAssignedSessionsAsync(string playerEmail, FirestoreService firestore, string token)
+    {
+        await InitAsync();
+        var assignedSessions = await firestore.GetAssignedSessionsAsync(playerEmail, token);
+
+        foreach (var session in assignedSessions)
+        {
+            if (DateTime.TryParse(session.Date, out var date))
+            {
+                // Check if already exists
+                var existing = await _db!.Table<CalendarEvent>()
+                    .Where(e => e.Date == date && e.IsCoachAssigned && e.Title == session.Title)
+                    .FirstOrDefaultAsync();
+
+                if (existing is null)
+                {
+                    var calEvent = new CalendarEvent
+                    {
+                        Date = date,
+                        EventTypeInt = session.EventType,
+                        Title = session.Title,
+                        Notes = session.Notes,
+                        IsCoachAssigned = true
+                    };
+                    await _db.InsertAsync(calEvent);
+                }
+            }
+        }
     }
 }

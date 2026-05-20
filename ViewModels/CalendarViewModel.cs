@@ -30,6 +30,7 @@ public partial class CalendarViewModel : ObservableObject
     public async Task LoadAsync()
     {
         MonthLabel = new DateTime(CurrentYear, CurrentMonth, 1).ToString("MMMM yyyy");
+        await SyncCoachSessionsAsync();
         await BuildCalendarAsync();
     }
 
@@ -107,6 +108,27 @@ public partial class CalendarViewModel : ObservableObject
     public async Task RefreshAsync()
     {
         await BuildCalendarAsync();
+    }
+
+    private async Task SyncCoachSessionsAsync()
+    {
+        try
+        {
+            var auth = IPlatformApplication.Current!.Services
+                .GetRequiredService<GAAPerform.Auth.FirebaseAuthService>();
+            var firestore = IPlatformApplication.Current.Services
+                .GetRequiredService<GAAPerform.Auth.FirestoreService>();
+
+            if (auth.IsLoggedIn && auth.CurrentUserEmail is not null)
+            {
+                var token = await auth.GetTokenAsync();
+                await _db.SyncCoachAssignedSessionsAsync(auth.CurrentUserEmail, firestore, token);
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Sync error: {ex.Message}");
+        }
     }
 }
 
