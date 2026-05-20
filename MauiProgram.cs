@@ -55,6 +55,9 @@ public static class MauiProgram
         builder.Services.AddTransient<WeeklyReportPage>();
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<CoachSquadPage>();
+        builder.Services.AddTransient<HistoryPage>();
+        builder.Services.AddTransient<MePage>();
+        builder.Services.AddTransient<SettingsPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

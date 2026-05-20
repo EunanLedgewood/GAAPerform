@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GAAPerform.Views.MePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Me"
+    BackgroundColor="{StaticResource PageBackground}">
+
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="*,Auto" Padding="4,0">
+            <Label
+                Grid.Column="0"
+                Text="Me"
+                FontSize="18"
+                FontAttributes="Bold"
+                TextColor="White"
+                VerticalOptions="Center"/>
+            <Button
+                Grid.Column="1"
+                Text="⚙️"
+                FontSize="20"
+                BackgroundColor="Transparent"
+                TextColor="White"
+                Clicked="OnSettingsTapped"/>
+        </Grid>
+    </Shell.TitleView>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,12" Spacing="0">
+
+            <!-- Profile header -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <Grid ColumnDefinitions="60,*" ColumnSpacing="16">
+                    <Border
+                        Grid.Column="0"
+                        WidthRequest="56"
+                        HeightRequest="56"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 28"
+                        BackgroundColor="{StaticResource GaaGreen}">
+                        <Label
+                            Text="🏃"
+                            FontSize="28"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"/>
+                    </Border>
+                    <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                        <Label x:Name="EmailLabel" FontSize="15" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
+                        <Label x:Name="RoleLabel" FontSize="13" TextColor="{StaticResource SecondaryText}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Stats -->
+            <Label Text="MY STATS" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" Margin="0,0,0,16">
+                <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0" BackgroundColor="{StaticResource SurfaceBackground}">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label x:Name="SessionCountLabel" Text="0" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource GaaGreen}" HorizontalOptions="Center"/>
+                        <Label Text="Sessions" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource Card}" Margin="0" BackgroundColor="{StaticResource SurfaceBackground}">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label x:Name="ReadinessLabel" Text="0" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource GaaGreen}" HorizontalOptions="Center"/>
+                        <Label Text="Readiness" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource Card}" Margin="0" BackgroundColor="{StaticResource SurfaceBackground}">
+                    <VerticalStackLayout Spacing="2" HorizontalOptions="Center">
+                        <Label x:Name="StreakLabel" Text="0" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource GaaGreen}" HorizontalOptions="Center"/>
+                        <Label Text="Day streak" FontSize="11" TextColor="{StaticResource SecondaryText}" HorizontalOptions="Center"/>
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Recent activity -->
+            <Label Text="RECENT ACTIVITY" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource Card}">
+                <Label x:Name="RecentActivityLabel" Text="No recent activity. Start logging sessions!" FontSize="13" TextColor="{StaticResource SecondaryText}"/>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

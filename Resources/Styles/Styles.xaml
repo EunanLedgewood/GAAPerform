@@ -54,4 +54,12 @@
         <Setter Property="Shell.TabBarUnselectedColor" Value="{StaticResource SecondaryText}" />
     </Style>
 
+    <Style x:Key="SettingsButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TextColor" Value="{StaticResource PrimaryText}"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Padding" Value="16,12"/>
+    </Style>
+
 </ResourceDictionary>

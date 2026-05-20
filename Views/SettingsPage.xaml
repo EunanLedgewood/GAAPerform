@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="GAAPerform.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Settings"
+    BackgroundColor="{StaticResource PageBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,12" Spacing="0">
+
+            <!-- Account -->
+            <Label Text="ACCOUNT" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <VerticalStackLayout Spacing="0">
+                    <Button Text="Profile" Clicked="OnProfileTapped" Style="{StaticResource SettingsButton}"/>
+                    <BoxView HeightRequest="0.5" BackgroundColor="{StaticResource BorderColor}"/>
+                    <Button Text="Reset Password" Clicked="OnResetPasswordTapped" Style="{StaticResource SettingsButton}"/>
+                    <BoxView HeightRequest="0.5" BackgroundColor="{StaticResource BorderColor}"/>
+                    <Button Text="GAAPerform Pro ⭐" Clicked="OnProTapped" Style="{StaticResource SettingsButton}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Preferences -->
+            <Label Text="PREFERENCES" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <VerticalStackLayout Spacing="0">
+                    <Button Text="My Training" Clicked="OnMyTrainingTapped" Style="{StaticResource SettingsButton}"/>
+                    <BoxView HeightRequest="0.5" BackgroundColor="{StaticResource BorderColor}"/>
+                    <Grid ColumnDefinitions="*,Auto" Padding="16,12">
+                        <Label Grid.Column="0" Text="Dark Mode" FontSize="15" TextColor="{StaticResource PrimaryText}" VerticalOptions="Center"/>
+                        <Switch Grid.Column="1" x:Name="DarkModeSwitch" Toggled="OnDarkModeToggled"/>
+                    </Grid>
+                    <BoxView HeightRequest="0.5" BackgroundColor="{StaticResource BorderColor}"/>
+                    <Button Text="Notification Settings" Clicked="OnNotificationsTapped" Style="{StaticResource SettingsButton}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Support -->
+            <Label Text="SUPPORT" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <VerticalStackLayout Spacing="0">
+                    <Button Text="Terms of Service" Clicked="OnTermsTapped" Style="{StaticResource SettingsButton}"/>
+                    <BoxView HeightRequest="0.5" BackgroundColor="{StaticResource BorderColor}"/>
+                    <Button Text="Privacy Policy" Clicked="OnPrivacyTapped" Style="{StaticResource SettingsButton}"/>
+                    <BoxView HeightRequest="0.5" BackgroundColor="{StaticResource BorderColor}"/>
+                    <Button Text="Check for Updates" Clicked="OnUpdatesTapped" Style="{StaticResource SettingsButton}"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Logout -->
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <Button Text="Log Out" Clicked="OnLogoutTapped"
+                    BackgroundColor="Transparent"
+                    TextColor="#c62828"
+                    FontSize="15"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Fill"/>
+            </Border>
+
+            <!-- Version -->
+            <Label
+                Text="GAA Perform v1.0.0"
+                FontSize="12"
+                TextColor="{StaticResource SecondaryText}"
+                HorizontalOptions="Center"
+                Margin="0,8,0,24"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

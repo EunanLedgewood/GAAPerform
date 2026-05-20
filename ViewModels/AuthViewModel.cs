@@ -77,6 +77,8 @@ public partial class AuthViewModel : ObservableObject
             HasError = true;
         }
 
+        Preferences.Set("user_email", _auth.CurrentUserEmail ?? string.Empty);
+
         IsBusy = false;
     }
 
@@ -124,6 +126,8 @@ public partial class AuthViewModel : ObservableObject
             ErrorMessage = error ?? "Registration failed. Please try again.";
             HasError = true;
         }
+
+        Preferences.Set("user_email", Email);
 
         IsBusy = false;
     }

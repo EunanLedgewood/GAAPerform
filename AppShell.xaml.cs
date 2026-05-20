@@ -23,7 +23,7 @@ public partial class AppShell : Shell
             };
 
             if (Items.FirstOrDefault() is TabBar tabBar)
-                tabBar.Items.Add(coachTab);
+                tabBar.Items.Insert(4, coachTab);
         }
     }
 }
