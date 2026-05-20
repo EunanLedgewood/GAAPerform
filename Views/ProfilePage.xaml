@@ -86,6 +86,19 @@
 				</VerticalStackLayout>
 			</Border>
 
-		</VerticalStackLayout>
+            <!-- Logout -->
+            <Button
+                Text="Log Out"
+                Clicked="OnLogoutTapped"
+                BackgroundColor="Transparent"
+                TextColor="#c62828"
+                FontSize="14"
+                FontAttributes="Bold"
+                Margin="0,24,0,0"
+                BorderColor="#c62828"
+                BorderWidth="1"
+                CornerRadius="8"
+                HeightRequest="46"/>
+        </VerticalStackLayout>
 	</ScrollView>
 </ContentPage>

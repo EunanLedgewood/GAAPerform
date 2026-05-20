@@ -116,6 +116,7 @@ public partial class AuthViewModel : ObservableObject
             await _firestore.SaveUserProfileAsync(_auth.CurrentUserId!, Email, role, token);
             Preferences.Set("user_role", role);
             Preferences.Set("is_logged_in", true);
+
             Application.Current!.Windows[0].Page = new AppShell();
         }
         else
