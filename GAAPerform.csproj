@@ -58,6 +58,9 @@
 		<MauiXaml Update="Views\MePage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\ActiveSessionPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\OnboardingPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -79,11 +82,17 @@
 		<MauiXaml Update="Views\WeekPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\ActiveSessionPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Update="Views\LogPage.xaml.cs">
 			<DependentUpon>LogPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\ActiveSessionPage.xaml.cs">
+		  <DependentUpon>ActiveSessionPage.xaml</DependentUpon>
 		</Compile>
 		<Compile Update="Views\OnboardingPage.xaml.cs">
 			<DependentUpon>OnboardingPage.xaml</DependentUpon>
@@ -114,6 +123,9 @@
 		</Compile>
 		<Compile Update="Views\SettingsPage.xaml.cs">
 			<DependentUpon>SettingsPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\ActiveSessionPage.xaml.cs">
+			<DependentUpon>ActiveSessionPage.xaml</DependentUpon>
 		</Compile>
 	</ItemGroup>
 	<ItemGroup>

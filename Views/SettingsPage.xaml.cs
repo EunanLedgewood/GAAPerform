@@ -15,7 +15,7 @@ public partial class SettingsPage : ContentPage
 
     private async void OnProfileTapped(object sender, EventArgs e)
     {
-        await DisplayAlert("Profile", "Profile editing coming soon.", "OK");
+        await DisplayAlertAsync("Profile", "Profile editing coming soon.", "OK");
     }
 
     private async void OnResetPasswordTapped(object sender, EventArgs e)
@@ -23,30 +23,25 @@ public partial class SettingsPage : ContentPage
         var email = Preferences.Get("user_email", string.Empty);
         if (string.IsNullOrEmpty(email))
         {
-            await DisplayAlert("Error", "No email found.", "OK");
+            await DisplayAlertAsync("Error", "No email found.", "OK");
             return;
         }
-        await DisplayAlert("Reset Password", $"A password reset email will be sent to {email}.", "OK");
+        await DisplayAlertAsync("Reset Password", $"A password reset email will be sent to {email}.", "OK");
     }
 
     private async void OnProTapped(object sender, EventArgs e)
     {
-        await DisplayAlert("GAAPerform Pro ⭐", "Pro features coming soon!\n\nUnlock:\n• Advanced analytics\n• Unlimited coach players\n• Custom programs", "OK");
+        await DisplayAlertAsync("GAAPerform Pro ⭐", "Pro features coming soon!\n\nUnlock:\n• Advanced analytics\n• Unlimited coach players\n• Custom programs", "OK");
     }
 
     private async void OnMyTrainingTapped(object sender, EventArgs e)
     {
-        await DisplayAlert("My Training", "Training preferences coming soon.", "OK");
-    }
-
-    private void OnDarkModeToggled(object sender, ToggledEventArgs e)
-    {
-        Application.Current!.UserAppTheme = e.Value ? AppTheme.Dark : AppTheme.Light;
+        await DisplayAlertAsync("My Training", "Training preferences coming soon.", "OK");
     }
 
     private async void OnNotificationsTapped(object sender, EventArgs e)
     {
-        await DisplayAlert("Notifications", "Notification settings coming soon.", "OK");
+        await DisplayAlertAsync("Notifications", "Notification settings coming soon.", "OK");
     }
 
     private async void OnTermsTapped(object sender, EventArgs e)
@@ -61,12 +56,12 @@ public partial class SettingsPage : ContentPage
 
     private async void OnUpdatesTapped(object sender, EventArgs e)
     {
-        await DisplayAlert("Check for Updates", "You are running the latest version.", "OK");
+        await DisplayAlertAsync("Check for Updates", "You are running the latest version.", "OK");
     }
 
     private async void OnLogoutTapped(object sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert("Log out", "Are you sure?", "Log out", "Cancel");
+        bool confirm = await DisplayAlertAsync("Log out", "Are you sure?", "Log out", "Cancel");
         if (confirm)
         {
             await _auth.SignOutAsync();

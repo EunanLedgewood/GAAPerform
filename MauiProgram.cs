@@ -42,6 +42,8 @@ public static class MauiProgram
         builder.Services.AddTransient<WeeklyReportViewModel>();
         builder.Services.AddTransient<AuthViewModel>();
         builder.Services.AddTransient<CoachSquadViewModel>();
+        builder.Services.AddTransient<ActiveSessionViewModel>();
+        builder.Services.AddTransient<ActiveSessionViewModel>();
 
         // Views
         builder.Services.AddTransient<WeekPage>();
@@ -58,6 +60,7 @@ public static class MauiProgram
         builder.Services.AddTransient<HistoryPage>();
         builder.Services.AddTransient<MePage>();
         builder.Services.AddTransient<SettingsPage>();
+        builder.Services.AddTransient<ActiveSessionPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

@@ -168,5 +168,17 @@
             </Border>
 
         </VerticalStackLayout>
+		<!-- Start session button -->
+		<Button
+			Text="▶ Start Session"
+			Clicked="OnStartSessionTapped"
+			BackgroundColor="{StaticResource GaaGreen}"
+			TextColor="White"
+			FontSize="16"
+			FontAttributes="Bold"
+			CornerRadius="8"
+			HeightRequest="52"
+			Margin="0,16,0,0"
+			IsVisible="{Binding IsRestDay, Converter={StaticResource InverseBoolConverter}}"/>
     </ScrollView>
 </ContentPage>

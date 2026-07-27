@@ -21,6 +21,7 @@ public class DatabaseService
         await _db.CreateTableAsync<SessionLog>();
         await _db.CreateTableAsync<UserProfile>();
         await _db.CreateTableAsync<CalendarEvent>();
+        await _db.CreateTableAsync<CompletedSession>();
     }
 
     public async Task<UserProfile> GetProfileAsync()
@@ -188,5 +189,33 @@ public class DatabaseService
                 }
             }
         }
+    }
+
+    public async Task SaveCompletedSessionAsync(CompletedSession session)
+    {
+        await InitAsync();
+        session.SetsJson = System.Text.Json.JsonSerializer.Serialize(session.Sets);
+        if (session.Id == 0)
+            await _db!.InsertAsync(session);
+        else
+            await _db!.UpdateAsync(session);
+    }
+
+    public async Task<List<CompletedSession>> GetCompletedSessionsAsync()
+    {
+        await InitAsync();
+        var sessions = await _db!.Table<CompletedSession>()
+            .OrderByDescending(s => s.Date)
+            .ToListAsync();
+
+        foreach (var session in sessions)
+        {
+            if (!string.IsNullOrEmpty(session.SetsJson))
+            {
+                session.Sets = System.Text.Json.JsonSerializer
+                    .Deserialize<List<CompletedSet>>(session.SetsJson) ?? new();
+            }
+        }
+        return sessions;
     }
 }
