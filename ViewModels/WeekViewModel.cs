@@ -39,7 +39,6 @@ public partial class WeekViewModel : ObservableObject
     {
         var profile = await _db.GetProfileAsync();
 
-        // Find the current week's Monday
         var today = DateTime.Today;
         var monday = today.AddDays(-(int)today.DayOfWeek + (int)DayOfWeek.Monday);
         if (today.DayOfWeek == DayOfWeek.Sunday)
@@ -62,7 +61,6 @@ public partial class WeekViewModel : ObservableObject
         }
         else
         {
-            // Fall back to next Sunday if no match in calendar
             matchDate = sunday;
             HasMatchThisWeek = false;
         }
@@ -88,6 +86,10 @@ public partial class WeekViewModel : ObservableObject
                         _ => day.Type
                     };
                 }
+
+                // Check if any event for this day is marked completed
+                if (dayEvents.Any(e => e.IsCompleted))
+                    day.IsCompleted = true;
             }
         }
 

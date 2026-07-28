@@ -26,7 +26,12 @@ public partial class SettingsPage : ContentPage
             await DisplayAlertAsync("Error", "No email found.", "OK");
             return;
         }
-        await DisplayAlertAsync("Reset Password", $"A password reset email will be sent to {email}.", "OK");
+
+        var (success, error) = await _auth.SendPasswordResetAsync(email);
+        if (success)
+            await DisplayAlertAsync("Reset Password", $"Password reset email sent to {email}.", "OK");
+        else
+            await DisplayAlertAsync("Error", error ?? "Failed to send reset email.", "OK");
     }
 
     private async void OnProTapped(object sender, EventArgs e)

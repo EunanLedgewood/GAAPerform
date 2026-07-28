@@ -12,7 +12,6 @@ public partial class WeekPage : ContentPage
         InitializeComponent();
         _vm = vm;
         BindingContext = vm;
-        Resources.Add("SessionIconConverter", new SessionIconConverter());
         _vm.PropertyChanged += OnViewModelPropertyChanged;
     }
 

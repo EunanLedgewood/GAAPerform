@@ -7,6 +7,7 @@ public class FirebaseAuthService
 {
     private readonly FirebaseAuthClient _client;
     private static AppSettings? _settings;
+    private DateTime? _lastPasswordResetSent;
 
     private static AppSettings Settings => _settings ??= AppSettings.Load();
 
@@ -64,5 +65,30 @@ public class FirebaseAuthService
     {
         _client.SignOut();
         return Task.CompletedTask;
+    }
+
+    public async Task<(bool success, string? error)> SendPasswordResetAsync(string email)
+    {
+        // Check 5 minute cooldown
+        if (_lastPasswordResetSent.HasValue)
+        {
+            var elapsed = DateTime.Now - _lastPasswordResetSent.Value;
+            if (elapsed.TotalMinutes < 5)
+            {
+                var remaining = (int)(5 - elapsed.TotalMinutes) + 1;
+                return (false, $"Please wait {remaining} minutes before requesting another reset email.");
+            }
+        }
+
+        try
+        {
+            await _client.ResetEmailPasswordAsync(email);
+            _lastPasswordResetSent = DateTime.Now;
+            return (true, null);
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
     }
 }

@@ -11,6 +11,7 @@ public partial class ActiveSessionViewModel : ObservableObject
     private readonly DatabaseService _db;
     private System.Timers.Timer? _timer;
     private int _elapsedSeconds = 0;
+    public TrainingDay? CompletedDay { get; private set; }
 
     [ObservableProperty] private string sessionTitle = string.Empty;
     [ObservableProperty] private SessionType sessionType;
@@ -39,6 +40,7 @@ public partial class ActiveSessionViewModel : ObservableObject
     public void LoadSession(TrainingDay day, SessionDetail detail)
     {
         _day = day;
+        CompletedDay = day;
         SessionTitle = detail.Title;
         SessionType = day.Type;
 
@@ -178,7 +180,6 @@ public partial class ActiveSessionViewModel : ObservableObject
 
         await _db.SaveCompletedSessionAsync(completed);
 
-        // Also log it as a session log for readiness tracking
         await _db.SaveLogAsync(new Models.SessionLog
         {
             Date = DateTime.Now,
@@ -186,6 +187,37 @@ public partial class ActiveSessionViewModel : ObservableObject
             SorenessScore = 2,
             SessionType = SessionType
         });
+
+        // Mark the day as completed in calendar
+        if (_day is not null)
+        {
+            var existingEvents = await _db.GetEventsForDateAsync(_day.Date);
+            var existingEvent = existingEvents.FirstOrDefault();
+            if (existingEvent is not null)
+            {
+                existingEvent.IsCompleted = true;
+                await _db.SaveEventAsync(existingEvent);
+            }
+            else
+            {
+                // Create a completed event for this day
+                await _db.SaveEventAsync(new Models.CalendarEvent
+                {
+                    Date = _day.Date,
+                    EventTypeInt = (int)(_day.Type switch
+                    {
+                        SessionType.Match => Models.EventType.Match,
+                        SessionType.Strength => Models.EventType.GymSession,
+                        SessionType.Recovery => Models.EventType.Recovery,
+                        _ => Models.EventType.Training
+                    }),
+                    Title = SessionTitle,
+                    IsCompleted = true
+                });
+            }
+        }
+
+        await Application.Current!.Windows[0].Page!.Navigation.PopToRootAsync();
     }
 
     public void Cleanup()
