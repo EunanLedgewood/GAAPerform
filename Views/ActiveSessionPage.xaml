@@ -37,8 +37,7 @@
                     Text="{Binding TimerDisplay}"
                     FontSize="14"
                     FontAttributes="Bold"
-                    TextColor="White"
-                    FontFamily="Courier"/>
+                    TextColor="White"/>
             </Border>
         </Grid>
     </Shell.TitleView>

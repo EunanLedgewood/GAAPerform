@@ -191,33 +191,15 @@ public partial class ActiveSessionViewModel : ObservableObject
         // Mark the day as completed in calendar
         if (_day is not null)
         {
-            var existingEvents = await _db.GetEventsForDateAsync(_day.Date);
-            var existingEvent = existingEvents.FirstOrDefault();
-            if (existingEvent is not null)
-            {
-                existingEvent.IsCompleted = true;
-                await _db.SaveEventAsync(existingEvent);
-            }
-            else
-            {
-                // Create a completed event for this day
-                await _db.SaveEventAsync(new Models.CalendarEvent
-                {
-                    Date = _day.Date,
-                    EventTypeInt = (int)(_day.Type switch
-                    {
-                        SessionType.Match => Models.EventType.Match,
-                        SessionType.Strength => Models.EventType.GymSession,
-                        SessionType.Recovery => Models.EventType.Recovery,
-                        _ => Models.EventType.Training
-                    }),
-                    Title = SessionTitle,
-                    IsCompleted = true
-                });
-            }
+            var key = $"completed_{_day.Date.Date:yyyy-MM-dd}";
+            Preferences.Set(key, true);
+            System.Diagnostics.Debug.WriteLine($"SAVED key: {key}");
         }
 
         await Application.Current!.Windows[0].Page!.Navigation.PopToRootAsync();
+
+        var checkKey = $"completed_{_day!.Date.Date:yyyy-MM-dd}";
+        System.Diagnostics.Debug.WriteLine($"VERIFY after save: {Preferences.Get(checkKey, false)}");
     }
 
     public void Cleanup()

@@ -70,27 +70,9 @@ public partial class WeekViewModel : ObservableObject
         // Overlay any calendar events onto the plan
         foreach (var day in plan)
         {
-            var dayEvents = weekEvents.Where(e => e.Date.Date == day.Date.Date).ToList();
-            if (dayEvents.Any())
-            {
-                var firstEvent = dayEvents.First();
-                if (firstEvent.EventType != Models.EventType.Match)
-                {
-                    day.Label = firstEvent.Title;
-                    day.Meta = firstEvent.Notes.Length > 0 ? firstEvent.Notes : day.Meta;
-                    day.Type = firstEvent.EventType switch
-                    {
-                        Models.EventType.Training => SessionType.Field,
-                        Models.EventType.GymSession => SessionType.Strength,
-                        Models.EventType.Recovery => SessionType.Recovery,
-                        _ => day.Type
-                    };
-                }
-
-                // Check if any event for this day is marked completed
-                if (dayEvents.Any(e => e.IsCompleted))
-                    day.IsCompleted = true;
-            }
+            var key = $"completed_{day.Date.Date:yyyy-MM-dd}";
+            day.IsCompleted = Preferences.Get(key, false);
+            System.Diagnostics.Debug.WriteLine($"CHECKING key: {key} = {day.IsCompleted}");
         }
 
         // Check for missed sessions
