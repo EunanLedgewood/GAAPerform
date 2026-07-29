@@ -29,7 +29,7 @@ public partial class SessionDetailPage : ContentPage
         await _vm.LoadAsync(_day);
     }
 
-    private async void OnStartSessionTapped(object sender, EventArgs e)
+    private async void OnStartSessionTapped(object? sender, EventArgs e)
     {
         var profile = await _db.GetProfileAsync();
         var detail = _library.GetSessionDetail(_day, profile.Position);

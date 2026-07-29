@@ -36,4 +36,9 @@ public partial class ActiveSessionPage : ContentPage
             await Navigation.PopAsync();
         }
     }
+
+    private void OnFinishTapped(object? sender, EventArgs e)
+    {
+        _vm.FinishSession();
+    }
 }

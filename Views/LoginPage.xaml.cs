@@ -10,7 +10,7 @@ public partial class LoginPage : ContentPage
         BindingContext = vm;
     }
 
-    private async void OnForgotPasswordTapped(object sender, EventArgs e)
+    private async void OnForgotPasswordTapped(object? sender, EventArgs e)
     {
         var vm = BindingContext as GAAPerform.ViewModels.AuthViewModel;
         if (string.IsNullOrWhiteSpace(vm?.Email))

@@ -97,6 +97,7 @@ public partial class WeekViewModel : ObservableObject
     [RelayCommand]
     private void ToggleSession(TrainingDay day)
     {
+        if (day.Type == SessionType.Rest) return;
         SelectedDay = day;
     }
 

@@ -49,7 +49,7 @@ public partial class MePage : ContentPage
         }
     }
 
-    private async void OnSettingsTapped(object sender, EventArgs e)
+    private async void OnSettingsTapped(object? sender, EventArgs e)
     {
         var settingsPage = IPlatformApplication.Current!.Services
             .GetRequiredService<SettingsPage>();

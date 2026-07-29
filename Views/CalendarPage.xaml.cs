@@ -20,7 +20,7 @@ public partial class CalendarPage : ContentPage
         await _vm.LoadAsync();
     }
 
-    private async void OnAddEventTapped(object sender, EventArgs e)
+    private async void OnAddEventTapped(object? sender, EventArgs e)
     {
         var addPage = IPlatformApplication.Current!.Services
             .GetRequiredService<AddEventPage>();
@@ -29,7 +29,7 @@ public partial class CalendarPage : ContentPage
         await _vm.RefreshAsync();
     }
 
-    private async void OnEventSelected(object sender, SelectionChangedEventArgs e)
+    private async void OnEventSelected(object? sender, SelectionChangedEventArgs e)
     {
         if (e.CurrentSelection.FirstOrDefault() is not CalendarEvent selectedEvent)
             return;
@@ -37,7 +37,7 @@ public partial class CalendarPage : ContentPage
         // Deselect
         EventsCollection.SelectedItem = null;
 
-        bool confirm = await DisplayAlert(
+        bool confirm = await DisplayAlertAsync(
             "Delete event",
             $"Delete '{selectedEvent.Title}'?",
             "Delete",

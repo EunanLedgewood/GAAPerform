@@ -60,32 +60,45 @@ public partial class ActiveSessionViewModel : ObservableObject
             {
                 SetNumber = 1,
                 Exercises = new List<CompletedExercise>
+            {
+                new CompletedExercise
                 {
-                    new CompletedExercise { Name = "Custom exercise", CoachNotes = "Add your own exercises" }
+                    Name = "Custom exercise",
+                    CoachNotes = "Add your own exercises",
+                    Sets = new List<ExerciseSet> { new ExerciseSet() }
                 }
+            }
             });
             return sets;
         }
 
-        // Group every 3 exercises into a set
-        int setNumber = 1;
-        for (int i = 0; i < exercises.Count; i += 3)
+        // Each screen shows all exercises, player adds sets per exercise
+        var completedExercises = exercises.Select(e => new CompletedExercise
         {
-            var setExercises = exercises.Skip(i).Take(3).Select(e => new CompletedExercise
-            {
-                Name = e.Name,
-                CoachNotes = e.Notes,
-                ActualWeight = string.Empty,
-                ActualReps = e.Reps
-            }).ToList();
+            Name = e.Name,
+            CoachNotes = e.Notes,
+            Sets = new List<ExerciseSet> { new ExerciseSet { Reps = e.Reps } }
+        }).ToList();
 
-            sets.Add(new CompletedSet
-            {
-                SetNumber = setNumber++,
-                Exercises = setExercises
-            });
-        }
+        sets.Add(new CompletedSet
+        {
+            SetNumber = 1,
+            Exercises = completedExercises
+        });
+
         return sets;
+    }
+
+    [RelayCommand]
+    private void AddSet(CompletedExercise exercise)
+    {
+        exercise.Sets.Add(new ExerciseSet { Reps = exercise.Sets.LastOrDefault()?.Reps ?? string.Empty });
+        var index = CurrentExercises.IndexOf(exercise);
+        if (index >= 0)
+        {
+            CurrentExercises.RemoveAt(index);
+            CurrentExercises.Insert(index, exercise);
+        }
     }
 
     private void UpdateCurrentSet()
@@ -154,7 +167,8 @@ public partial class ActiveSessionViewModel : ObservableObject
         }
     }
 
-    private void FinishSession()
+    [RelayCommand]
+    public void FinishSession()
     {
         _timer?.Stop();
         _timer?.Dispose();

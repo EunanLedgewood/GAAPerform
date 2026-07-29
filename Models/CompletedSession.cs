@@ -6,6 +6,13 @@ public class CompletedSet
     public List<CompletedExercise> Exercises { get; set; } = new();
 }
 
+public class ExerciseSet
+{
+    public string Weight { get; set; } = string.Empty;
+    public string Reps { get; set; } = string.Empty;
+    public bool IsCompleted { get; set; } = false;
+}
+
 public class CompletedExercise
 {
     public string Name { get; set; } = string.Empty;
@@ -13,6 +20,7 @@ public class CompletedExercise
     public string ActualWeight { get; set; } = string.Empty;
     public string ActualReps { get; set; } = string.Empty;
     public bool IsCompleted { get; set; } = false;
+    public List<ExerciseSet> Sets { get; set; } = new() { new ExerciseSet() };
 }
 
 public class CompletedSession
@@ -36,4 +44,18 @@ public class CompletedSession
     [SQLite.Ignore]
     public string DurationFormatted =>
         $"{DurationSeconds / 3600:00}:{(DurationSeconds % 3600) / 60:00}:{DurationSeconds % 60:00}";
+
+    [SQLite.Ignore]
+    public bool IsExpanded { get; set; } = false;
+
+    [SQLite.Ignore]
+    public string SessionTypeIcon => SessionType switch
+    {
+        SessionType.Match => "⚽",
+        SessionType.Strength => "💪",
+        SessionType.Field => "🏃",
+        SessionType.Recovery => "🛌",
+        _ => "📋"
+    };
 }
+

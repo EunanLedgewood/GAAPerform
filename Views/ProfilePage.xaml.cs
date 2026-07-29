@@ -20,9 +20,9 @@ public partial class ProfilePage : ContentPage
         await _vm.LoadAsync();
     }
 
-    private async void OnLogoutTapped(object sender, EventArgs e)
+    private async void OnLogoutTapped(object? sender, EventArgs e)
     {
-        bool confirm = await DisplayAlert(
+        bool confirm = await DisplayAlertAsync(
             "Log out",
             "Are you sure you want to log out?",
             "Log out",

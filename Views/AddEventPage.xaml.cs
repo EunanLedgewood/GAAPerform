@@ -20,7 +20,7 @@ public partial class AddEventPage : ContentPage
         _vm.SetDate(date);
     }
 
-    private async void OnSaveClicked(object sender, EventArgs e)
+    private async void OnSaveClicked(object? sender, EventArgs e)
     {
         await _vm.SaveEventCommand.ExecuteAsync(null);
         await _calendarVm.RefreshAsync();

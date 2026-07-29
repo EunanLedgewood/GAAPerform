@@ -44,6 +44,7 @@ public static class MauiProgram
         builder.Services.AddTransient<CoachSquadViewModel>();
         builder.Services.AddTransient<ActiveSessionViewModel>();
         builder.Services.AddTransient<ActiveSessionViewModel>();
+        builder.Services.AddTransient<HistoryViewModel>();
 
         // Views
         builder.Services.AddTransient<WeekPage>();

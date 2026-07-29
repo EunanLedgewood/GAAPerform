@@ -12,10 +12,10 @@
         <ResourceDictionary>
             <local:InverseBoolConverter x:Key="InverseBoolConverter"/>
             <local:StringToBoolConverter x:Key="StringToBoolConverter"/>
+            <local:BoolToCheckBgConverter x:Key="BoolToCheckBgConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <!-- Custom title bar with timer -->
     <Shell.TitleView>
         <Grid ColumnDefinitions="*,Auto" Padding="4,0">
             <Label
@@ -48,16 +48,16 @@
             <VerticalStackLayout Padding="16,12" Spacing="0">
 
                 <!-- Start session screen -->
-                <VerticalStackLayout IsVisible="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}" Spacing="0">
+                <VerticalStackLayout
+                    IsVisible="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"
+                    Spacing="0">
                     <VerticalStackLayout IsVisible="{Binding IsNotFinished}" Spacing="0">
-
                         <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="{Binding SessionTitle}" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
                                 <Label Text="Tap Start Session to begin. Your timer will start automatically." FontSize="13" TextColor="{StaticResource SecondaryText}" LineHeight="1.5"/>
                             </VerticalStackLayout>
                         </Border>
-
                         <Button
                             Text="▶ Start Session"
                             Command="{Binding StartSessionCommand}"
@@ -74,41 +74,8 @@
                 <VerticalStackLayout IsVisible="{Binding IsRunning}" Spacing="0">
                     <VerticalStackLayout IsVisible="{Binding IsNotFinished}" Spacing="0">
 
-                        <!-- Set header -->
-                        <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,0,0,12">
-                            <Button
-                                Grid.Column="0"
-                                Text="‹"
-                                FontSize="22"
-                                BackgroundColor="Transparent"
-                                TextColor="{StaticResource GaaGreen}"
-                                FontAttributes="Bold"
-                                IsEnabled="{Binding CanGoPrevious}"
-                                Command="{Binding PreviousSetCommand}"
-                                WidthRequest="44"/>
-                            <Label
-                                Grid.Column="1"
-                                Text="{Binding SetLabel}"
-                                FontSize="18"
-                                FontAttributes="Bold"
-                                TextColor="{StaticResource GaaGreen}"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center"/>
-                            <Button
-                                Grid.Column="2"
-                                Text="›"
-                                FontSize="22"
-                                BackgroundColor="Transparent"
-                                TextColor="{StaticResource GaaGreen}"
-                                FontAttributes="Bold"
-                                Command="{Binding NextSetCommand}"
-                                WidthRequest="44"/>
-                        </Grid>
-
                         <!-- Exercises -->
-                        <CollectionView
-                            ItemsSource="{Binding CurrentExercises}"
-                            SelectionMode="None">
+                        <CollectionView ItemsSource="{Binding CurrentExercises}" SelectionMode="None">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate x:DataType="models:CompletedExercise">
                                     <Border Style="{StaticResource Card}">
@@ -155,48 +122,76 @@
                                                 IsVisible="{Binding CoachNotes, Converter={StaticResource StringToBoolConverter}}"
                                                 LineHeight="1.4"/>
 
-                                            <!-- Weight and reps inputs -->
-                                            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                                                <VerticalStackLayout Grid.Column="0" Spacing="4">
-                                                    <Label Text="WEIGHT (kg)" FontSize="10" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5"/>
-                                                    <Border
-                                                        BackgroundColor="{StaticResource SurfaceBackground}"
-                                                        StrokeThickness="0.5"
-                                                        Stroke="{StaticResource BorderColor}"
-                                                        StrokeShape="RoundRectangle 8"
-                                                        Padding="10,6">
-                                                        <Entry
-                                                            Text="{Binding ActualWeight}"
-                                                            Placeholder="0"
-                                                            FontSize="16"
-                                                            FontAttributes="Bold"
-                                                            Keyboard="Numeric"
-                                                            TextColor="{StaticResource PrimaryText}"
-                                                            BackgroundColor="Transparent"
-                                                            HorizontalTextAlignment="Center"/>
-                                                    </Border>
-                                                </VerticalStackLayout>
-
-                                                <VerticalStackLayout Grid.Column="1" Spacing="4">
-                                                    <Label Text="REPS" FontSize="10" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5"/>
-                                                    <Border
-                                                        BackgroundColor="{StaticResource SurfaceBackground}"
-                                                        StrokeThickness="0.5"
-                                                        Stroke="{StaticResource BorderColor}"
-                                                        StrokeShape="RoundRectangle 8"
-                                                        Padding="10,6">
-                                                        <Entry
-                                                            Text="{Binding ActualReps}"
-                                                            Placeholder="0"
-                                                            FontSize="16"
-                                                            FontAttributes="Bold"
-                                                            Keyboard="Numeric"
-                                                            TextColor="{StaticResource PrimaryText}"
-                                                            BackgroundColor="Transparent"
-                                                            HorizontalTextAlignment="Center"/>
-                                                    </Border>
-                                                </VerticalStackLayout>
+                                            <!-- Set headers -->
+                                            <Grid ColumnDefinitions="Auto,*,*" ColumnSpacing="8">
+                                                <Label Grid.Column="0" Text="SET" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5" WidthRequest="30"/>
+                                                <Label Grid.Column="1" Text="WEIGHT (kg)" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5" HorizontalOptions="Center"/>
+                                                <Label Grid.Column="2" Text="REPS" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5" HorizontalOptions="Center"/>
                                             </Grid>
+
+                                            <!-- Sets list -->
+                                            <CollectionView ItemsSource="{Binding Sets}" SelectionMode="None">
+                                                <CollectionView.ItemTemplate>
+                                                    <DataTemplate x:DataType="models:ExerciseSet">
+                                                        <Grid ColumnDefinitions="Auto,*,*" ColumnSpacing="8" Margin="0,2">
+                                                            <Label
+                                                                Grid.Column="0"
+                                                                FontSize="13"
+                                                                FontAttributes="Bold"
+                                                                TextColor="{StaticResource GaaGreen}"
+                                                                VerticalOptions="Center"
+                                                                WidthRequest="30"
+                                                                HorizontalOptions="Center"/>
+                                                            <Border
+                                                                Grid.Column="1"
+                                                                BackgroundColor="{StaticResource SurfaceBackground}"
+                                                                StrokeThickness="0.5"
+                                                                Stroke="{StaticResource BorderColor}"
+                                                                StrokeShape="RoundRectangle 8"
+                                                                Padding="8,6">
+                                                                <Entry
+                                                                    Text="{Binding Weight}"
+                                                                    Placeholder="0"
+                                                                    FontSize="15"
+                                                                    FontAttributes="Bold"
+                                                                    Keyboard="Numeric"
+                                                                    TextColor="{StaticResource PrimaryText}"
+                                                                    BackgroundColor="Transparent"
+                                                                    HorizontalTextAlignment="Center"/>
+                                                            </Border>
+                                                            <Border
+                                                                Grid.Column="2"
+                                                                BackgroundColor="{StaticResource SurfaceBackground}"
+                                                                StrokeThickness="0.5"
+                                                                Stroke="{StaticResource BorderColor}"
+                                                                StrokeShape="RoundRectangle 8"
+                                                                Padding="8,6">
+                                                                <Entry
+                                                                    Text="{Binding Reps}"
+                                                                    Placeholder="0"
+                                                                    FontSize="15"
+                                                                    FontAttributes="Bold"
+                                                                    Keyboard="Numeric"
+                                                                    TextColor="{StaticResource PrimaryText}"
+                                                                    BackgroundColor="Transparent"
+                                                                    HorizontalTextAlignment="Center"/>
+                                                            </Border>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </CollectionView.ItemTemplate>
+                                            </CollectionView>
+
+                                            <!-- Add set button -->
+                                            <Button
+                                                Text="+ Add Set"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveSessionViewModel}}, Path=AddSetCommand}"
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="Transparent"
+                                                TextColor="{StaticResource GaaGreen}"
+                                                FontSize="13"
+                                                FontAttributes="Bold"
+                                                HorizontalOptions="Start"
+                                                Padding="0"/>
 
                                         </VerticalStackLayout>
                                     </Border>
@@ -209,7 +204,6 @@
 
                 <!-- Finish session screen -->
                 <VerticalStackLayout IsVisible="{Binding IsFinished}" Spacing="0">
-
                     <Border Style="{StaticResource Card}" Margin="0,0,0,16">
                         <VerticalStackLayout Spacing="8" HorizontalOptions="Center" Padding="0,8">
                             <Label Text="🏆" FontSize="48" HorizontalOptions="Center"/>
@@ -246,17 +240,16 @@
                         FontAttributes="Bold"
                         CornerRadius="8"
                         HeightRequest="52"/>
-
                 </VerticalStackLayout>
 
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Next set button pinned to bottom -->
+        <!-- Finish session button pinned to bottom -->
         <Button
             Grid.Row="1"
-            Text="Next Set →"
-            Command="{Binding NextSetCommand}"
+            Text="Finish Session →"
+            Clicked="OnFinishTapped"
             BackgroundColor="{StaticResource GaaGreen}"
             TextColor="White"
             FontSize="15"
