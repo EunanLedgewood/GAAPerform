@@ -1,4 +1,6 @@
-﻿namespace GAAPerform.Models;
+﻿using System.Collections.ObjectModel;
+
+namespace GAAPerform.Models;
 
 public class CompletedSet
 {
@@ -20,7 +22,7 @@ public class CompletedExercise
     public string ActualWeight { get; set; } = string.Empty;
     public string ActualReps { get; set; } = string.Empty;
     public bool IsCompleted { get; set; } = false;
-    public List<ExerciseSet> Sets { get; set; } = new() { new ExerciseSet() };
+    public ObservableCollection<ExerciseSet> Sets { get; set; } = new() { new ExerciseSet() };
 }
 
 public class CompletedSession

@@ -181,17 +181,32 @@
                                                 </CollectionView.ItemTemplate>
                                             </CollectionView>
 
-                                            <!-- Add set button -->
-                                            <Button
-                                                Text="+ Add Set"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveSessionViewModel}}, Path=AddSetCommand}"
-                                                CommandParameter="{Binding .}"
-                                                BackgroundColor="Transparent"
-                                                TextColor="{StaticResource GaaGreen}"
-                                                FontSize="13"
-                                                FontAttributes="Bold"
-                                                HorizontalOptions="Start"
-                                                Padding="0"/>
+                                            <!-- Add/remove set button -->
+                                            <!-- Add/Remove set buttons -->
+                                            <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="8">
+                                                <Button
+        Grid.Column="0"
+        Text="+ Add Set"
+        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveSessionViewModel}}, Path=AddSetCommand}"
+        CommandParameter="{Binding .}"
+        BackgroundColor="Transparent"
+        TextColor="{StaticResource GaaGreen}"
+        FontSize="13"
+        FontAttributes="Bold"
+        HorizontalOptions="Start"
+        Padding="0"/>
+                                                <Button
+        Grid.Column="1"
+        Text="− Remove Set"
+        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveSessionViewModel}}, Path=RemoveSetCommand}"
+        CommandParameter="{Binding .}"
+        BackgroundColor="Transparent"
+        TextColor="#c62828"
+        FontSize="13"
+        FontAttributes="Bold"
+        HorizontalOptions="Start"
+        Padding="0"/>
+                                            </Grid>
 
                                         </VerticalStackLayout>
                                     </Border>

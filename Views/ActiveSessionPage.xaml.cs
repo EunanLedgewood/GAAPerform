@@ -12,8 +12,6 @@ public partial class ActiveSessionPage : ContentPage
         InitializeComponent();
         _vm = vm;
         BindingContext = vm;
-
-        Resources.Add("BoolToCheckBgConverter", new BoolToCheckBgConverter());
     }
 
     public void LoadSession(TrainingDay day, SessionDetail detail)

@@ -65,19 +65,18 @@ public partial class ActiveSessionViewModel : ObservableObject
                 {
                     Name = "Custom exercise",
                     CoachNotes = "Add your own exercises",
-                    Sets = new List<ExerciseSet> { new ExerciseSet() }
+                    Sets = new ObservableCollection<ExerciseSet> { new ExerciseSet() }
                 }
             }
             });
             return sets;
         }
 
-        // Each screen shows all exercises, player adds sets per exercise
         var completedExercises = exercises.Select(e => new CompletedExercise
         {
             Name = e.Name,
             CoachNotes = e.Notes,
-            Sets = new List<ExerciseSet> { new ExerciseSet { Reps = e.Reps } }
+            Sets = new ObservableCollection<ExerciseSet> { new ExerciseSet { Reps = e.Reps } }
         }).ToList();
 
         sets.Add(new CompletedSet
@@ -92,13 +91,17 @@ public partial class ActiveSessionViewModel : ObservableObject
     [RelayCommand]
     private void AddSet(CompletedExercise exercise)
     {
-        exercise.Sets.Add(new ExerciseSet { Reps = exercise.Sets.LastOrDefault()?.Reps ?? string.Empty });
-        var index = CurrentExercises.IndexOf(exercise);
-        if (index >= 0)
+        exercise.Sets.Add(new ExerciseSet
         {
-            CurrentExercises.RemoveAt(index);
-            CurrentExercises.Insert(index, exercise);
-        }
+            Reps = exercise.Sets.LastOrDefault()?.Reps ?? string.Empty
+        });
+    }
+
+    [RelayCommand]
+    private void RemoveSet(CompletedExercise exercise)
+    {
+        if (exercise.Sets.Count <= 1) return;
+        exercise.Sets.RemoveAt(exercise.Sets.Count - 1);
     }
 
     private void UpdateCurrentSet()
