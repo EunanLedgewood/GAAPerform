@@ -223,6 +223,34 @@ public partial class ActiveSessionViewModel : ObservableObject
 
         var checkKey = $"completed_{_day!.Date.Date:yyyy-MM-dd}";
         System.Diagnostics.Debug.WriteLine($"VERIFY after save: {Preferences.Get(checkKey, false)}");
+
+        // Share with coach via Firebase if player has a comment
+        if (!string.IsNullOrEmpty(PlayerComment))
+        {
+            try
+            {
+                var auth = IPlatformApplication.Current!.Services
+                    .GetRequiredService<GAAPerform.Auth.FirebaseAuthService>();
+                var firestore = IPlatformApplication.Current.Services
+                    .GetRequiredService<GAAPerform.Auth.FirestoreService>();
+
+                if (auth.IsLoggedIn && auth.CurrentUserEmail is not null)
+                {
+                    var token = await auth.GetTokenAsync();
+                    await firestore.SavePlayerSessionResultAsync(
+                        auth.CurrentUserEmail,
+                        SessionTitle,
+                        DateTime.Now,
+                        _elapsedSeconds,
+                        PlayerComment,
+                        token);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Firebase save error: {ex.Message}");
+            }
+        }
     }
 
     [RelayCommand]

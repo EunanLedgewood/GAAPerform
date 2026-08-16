@@ -78,29 +78,94 @@
                     IsVisible="{Binding HasPlayers}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Border Style="{StaticResource Card}">
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                                    <VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
-                                        <Label Text="🏃" FontSize="16"/>
-                                        <Label Text="{Binding .}" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
-                                    </VerticalStackLayout>
-                                    <Button
-                                        Grid.Column="1"
-                                        Text="Assign Session"
-                                        BackgroundColor="{StaticResource GaaGreen}"
-                                        TextColor="White"
-                                        FontSize="12"
-                                        FontAttributes="Bold"
-                                        CornerRadius="8"
-                                        HeightRequest="36"
-                                        Padding="10,0"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:CoachSquadPage}}, Path=BindingContext.SelectPlayerCommand}"
-                                        CommandParameter="{Binding .}"/>
-                                </Grid>
-                            </Border>
+							<Border Style="{StaticResource Card}">
+								<Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+									<VerticalStackLayout Grid.Column="0" Spacing="2" VerticalOptions="Center">
+										<Label Text="🏃" FontSize="16"/>
+										<Label Text="{Binding .}" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
+									</VerticalStackLayout>
+									<Button
+										Grid.Column="1"
+										Text="Results"
+										BackgroundColor="{StaticResource SurfaceBackground}"
+										TextColor="{StaticResource GaaGreen}"
+										FontSize="12"
+										FontAttributes="Bold"
+										CornerRadius="8"
+										HeightRequest="36"
+										Padding="10,0"
+										Command="{Binding Source={RelativeSource AncestorType={x:Type local:CoachSquadPage}}, Path=BindingContext.ViewPlayerResultsCommand}"
+										CommandParameter="{Binding .}"/>
+									<Button
+										Grid.Column="2"
+										Text="Assign"
+										BackgroundColor="{StaticResource GaaGreen}"
+										TextColor="White"
+										FontSize="12"
+										FontAttributes="Bold"
+										CornerRadius="8"
+										HeightRequest="36"
+										Padding="10,0"
+										Command="{Binding Source={RelativeSource AncestorType={x:Type local:CoachSquadPage}}, Path=BindingContext.SelectPlayerCommand}"
+										CommandParameter="{Binding .}"/>
+								</Grid>
+							</Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
+
+				<!-- Player results panel -->
+				<VerticalStackLayout IsVisible="{Binding HasResults}" Spacing="0" Margin="0,16,0,0">
+
+					<Label
+						Text="{Binding SelectedPlayerForResults, StringFormat='Results from: {0}'}"
+						Style="{StaticResource SectionTitle}"
+						Margin="0,0,0,8"/>
+
+					<CollectionView ItemsSource="{Binding PlayerResults}" SelectionMode="None">
+						<CollectionView.ItemTemplate>
+							<DataTemplate>
+								<Border Style="{StaticResource Card}">
+									<VerticalStackLayout Spacing="6">
+										<Grid ColumnDefinitions="*,Auto">
+											<Label
+												Grid.Column="0"
+												Text="{Binding SessionTitle}"
+												FontSize="14"
+												FontAttributes="Bold"
+												TextColor="{StaticResource PrimaryText}"/>
+											<Label
+												Grid.Column="1"
+												Text="{Binding DurationFormatted}"
+												FontSize="13"
+												FontAttributes="Bold"
+												TextColor="{StaticResource GaaGreen}"/>
+										</Grid>
+										<Label
+											Text="{Binding Date}"
+											FontSize="12"
+											TextColor="{StaticResource SecondaryText}"/>
+										<Border
+											BackgroundColor="{StaticResource SurfaceBackground}"
+											StrokeThickness="0"
+											StrokeShape="RoundRectangle 8"
+											Padding="10,8">
+											<VerticalStackLayout Spacing="2">
+												<Label Text="💬 Player comment" FontSize="10" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5"/>
+												<Label
+													Text="{Binding Comment}"
+													FontSize="13"
+													TextColor="{StaticResource PrimaryText}"
+													LineHeight="1.4"/>
+											</VerticalStackLayout>
+										</Border>
+									</VerticalStackLayout>
+								</Border>
+							</DataTemplate>
+						</CollectionView.ItemTemplate>
+					</CollectionView>
+
+				</VerticalStackLayout>
 
                 <!-- Assign session panel -->
                 <Border
@@ -127,6 +192,59 @@
                                 Command="{Binding CloseAssignPanelCommand}"/>
                         </Grid>
 
+						<!-- Player results panel -->
+						<VerticalStackLayout IsVisible="{Binding HasResults}" Spacing="0" Margin="0,16,0,0">
+
+							<Label
+								Text="{Binding SelectedPlayerForResults, StringFormat='Results from: {0}'}"
+								Style="{StaticResource SectionTitle}"
+								Margin="0,0,0,8"/>
+
+							<CollectionView ItemsSource="{Binding PlayerResults}" SelectionMode="None">
+								<CollectionView.ItemTemplate>
+									<DataTemplate>
+										<Border Style="{StaticResource Card}">
+											<VerticalStackLayout Spacing="6">
+												<Grid ColumnDefinitions="*,Auto">
+													<Label
+														Grid.Column="0"
+														Text="{Binding SessionTitle}"
+														FontSize="14"
+														FontAttributes="Bold"
+														TextColor="{StaticResource PrimaryText}"/>
+													<Label
+														Grid.Column="1"
+														Text="{Binding DurationFormatted}"
+														FontSize="13"
+														FontAttributes="Bold"
+														TextColor="{StaticResource GaaGreen}"/>
+												</Grid>
+												<Label
+													Text="{Binding Date}"
+													FontSize="12"
+													TextColor="{StaticResource SecondaryText}"/>
+												<Border
+													BackgroundColor="{StaticResource SurfaceBackground}"
+													StrokeThickness="0"
+													StrokeShape="RoundRectangle 8"
+													Padding="10,8">
+													<VerticalStackLayout Spacing="2">
+														<Label Text="💬 Player comment" FontSize="10" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5"/>
+														<Label
+															Text="{Binding Comment}"
+															FontSize="13"
+															TextColor="{StaticResource PrimaryText}"
+															LineHeight="1.4"/>
+													</VerticalStackLayout>
+												</Border>
+											</VerticalStackLayout>
+										</Border>
+									</DataTemplate>
+								</CollectionView.ItemTemplate>
+							</CollectionView>
+
+						</VerticalStackLayout>
+						
                         <!-- Session type -->
                         <Label Text="SESSION TYPE" Style="{StaticResource SectionTitle}" Margin="0,4,0,4"/>
                         <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">

@@ -5,6 +5,7 @@ using GAAPerform.Auth;
 using GAAPerform.Models;
 using IntelliJ.Lang.Annotations;
 using System.Collections.ObjectModel;
+using GAAPerform.Auth;
 
 namespace GAAPerform.ViewModels;
 
@@ -31,6 +32,11 @@ public partial class CoachSquadViewModel : ObservableObject
     [ObservableProperty] private bool isAssignRecovery = false;
     [ObservableProperty] private EventType selectedEventType = EventType.Training;
     [ObservableProperty] private bool showAssignPanel = false;
+
+    //Result loading to view for coaches
+    [ObservableProperty] private ObservableCollection<PlayerSessionResult> playerResults = new();
+    [ObservableProperty] private bool hasResults;
+    [ObservableProperty] private string selectedPlayerForResults = string.Empty;
 
     public CoachSquadViewModel(FirebaseAuthService auth, FirestoreService firestore)
     {
@@ -155,5 +161,24 @@ public partial class CoachSquadViewModel : ObservableObject
         {
             HasStatus = false;
         });
+    }
+
+    [RelayCommand]
+    private async Task ViewPlayerResultsAsync(string playerEmail)
+    {
+        SelectedPlayerForResults = playerEmail;
+        IsBusy = true;
+        try
+        {
+            var token = await _auth.GetTokenAsync();
+            var results = await _firestore.GetPlayerSessionResultsAsync(playerEmail, token);
+            PlayerResults = new ObservableCollection<PlayerSessionResult>(results);
+            HasResults = PlayerResults.Any();
+        }
+        catch (Exception ex)
+        {
+            ShowStatus($"Error loading results: {ex.Message}");
+        }
+        IsBusy = false;
     }
 }

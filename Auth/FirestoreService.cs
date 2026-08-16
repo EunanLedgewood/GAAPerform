@@ -112,6 +112,49 @@ public class FirestoreService
             return new List<string>();
         }
     }
+    public async Task SavePlayerSessionResultAsync(
+    string playerEmail,
+    string sessionTitle,
+    DateTime date,
+    int durationSeconds,
+    string comment,
+    string token)
+    {
+        using var client = GetClient(token);
+        var safeEmail = playerEmail.Replace(".", "_").Replace("@", "_at_");
+        await client
+            .Child("sessionResults")
+            .Child(safeEmail)
+            .PostAsync(new
+            {
+                playerEmail,
+                sessionTitle,
+                date = date.ToString("o"),
+                durationSeconds,
+                comment,
+                completedAt = DateTime.UtcNow.ToString("o")
+            });
+    }
+
+    public async Task<List<PlayerSessionResult>> GetPlayerSessionResultsAsync(
+        string playerEmail,
+        string token)
+    {
+        try
+        {
+            using var client = GetClient(token);
+            var safeEmail = playerEmail.Replace(".", "_").Replace("@", "_at_");
+            var result = await client
+                .Child("sessionResults")
+                .Child(safeEmail)
+                .OnceAsync<PlayerSessionResult>();
+            return result.Select(r => r.Object).OrderByDescending(r => r.CompletedAt).ToList();
+        }
+        catch
+        {
+            return new List<PlayerSessionResult>();
+        }
+    }
 }
 
 public class AssignedSession
@@ -128,4 +171,22 @@ public class AssignedSession
 public class PlayerRecord
 {
     public string PlayerEmail { get; set; } = string.Empty;
+}
+public class PlayerSessionResult
+{
+    public string PlayerEmail { get; set; } = string.Empty;
+    public string SessionTitle { get; set; } = string.Empty;
+    public string Date { get; set; } = string.Empty;
+    public int DurationSeconds { get; set; }
+    public string Comment { get; set; } = string.Empty;
+    public string CompletedAt { get; set; } = string.Empty;
+
+    public string DurationFormatted
+    {
+        get
+        {
+            var ts = TimeSpan.FromSeconds(DurationSeconds);
+            return $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}";
+        }
+    }
 }
