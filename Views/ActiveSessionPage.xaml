@@ -13,6 +13,7 @@
             <local:InverseBoolConverter x:Key="InverseBoolConverter"/>
             <local:StringToBoolConverter x:Key="StringToBoolConverter"/>
             <local:BoolToCheckBgConverter x:Key="BoolToCheckBgConverter"/>
+            <local:ExerciseFieldTypeToLabelConverter x:Key="ExerciseFieldTypeToLabelConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -84,128 +85,330 @@
                                             <!-- Exercise name and complete toggle -->
                                             <Grid ColumnDefinitions="*,Auto">
                                                 <Label
-                                                    Grid.Column="0"
-                                                    Text="{Binding Name}"
-                                                    FontSize="16"
-                                                    FontAttributes="Bold"
-                                                    TextColor="{StaticResource PrimaryText}"
-                                                    VerticalOptions="Center"/>
+                            Grid.Column="0"
+                            Text="{Binding Name}"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            TextColor="{StaticResource PrimaryText}"
+                            VerticalOptions="Center"/>
                                                 <Border
-                                                    Grid.Column="1"
-                                                    WidthRequest="28"
-                                                    HeightRequest="28"
-                                                    StrokeThickness="1.5"
-                                                    Stroke="{StaticResource GaaGreen}"
-                                                    StrokeShape="RoundRectangle 14"
-                                                    BackgroundColor="{Binding IsCompleted, Converter={StaticResource BoolToCheckBgConverter}}"
-                                                    VerticalOptions="Center">
+                            Grid.Column="1"
+                            WidthRequest="28"
+                            HeightRequest="28"
+                            StrokeThickness="1.5"
+                            Stroke="{StaticResource GaaGreen}"
+                            StrokeShape="RoundRectangle 14"
+                            BackgroundColor="{Binding IsCompleted, Converter={StaticResource BoolToCheckBgConverter}}"
+                            VerticalOptions="Center">
                                                     <Border.GestureRecognizers>
                                                         <TapGestureRecognizer
-                                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveSessionViewModel}}, Path=ToggleExerciseCompleteCommand}"
-                                                            CommandParameter="{Binding .}"/>
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveSessionViewModel}}, Path=ToggleExerciseCompleteCommand}"
+                                    CommandParameter="{Binding .}"/>
                                                     </Border.GestureRecognizers>
                                                     <Label
-                                                        Text="✓"
-                                                        FontSize="13"
-                                                        TextColor="White"
-                                                        HorizontalOptions="Center"
-                                                        VerticalOptions="Center"
-                                                        IsVisible="{Binding IsCompleted}"/>
+                                Text="✓"
+                                FontSize="13"
+                                TextColor="White"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                IsVisible="{Binding IsCompleted}"/>
                                                 </Border>
                                             </Grid>
 
                                             <!-- Coach notes -->
                                             <Label
-                                                Text="{Binding CoachNotes}"
-                                                FontSize="12"
-                                                TextColor="{StaticResource SecondaryText}"
-                                                IsVisible="{Binding CoachNotes, Converter={StaticResource StringToBoolConverter}}"
-                                                LineHeight="1.4"/>
+                        Text="{Binding CoachNotes}"
+                        FontSize="12"
+                        TextColor="{StaticResource SecondaryText}"
+                        IsVisible="{Binding CoachNotes, Converter={StaticResource StringToBoolConverter}}"
+                        LineHeight="1.4"/>
 
-                                            <!-- Set headers -->
-                                            <Grid ColumnDefinitions="Auto,*,*" ColumnSpacing="8">
+                                            <!-- Field type picker -->
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                                <Label
+        Grid.Column="0"
+        Text="Type:"
+        FontSize="13"
+        TextColor="{StaticResource SecondaryText}"
+        VerticalOptions="Center"/>
+                                                <Picker
+    Grid.Column="1"
+    FontSize="13"
+    TextColor="{StaticResource GaaGreen}"
+    HorizontalOptions="Start"
+    Loaded="OnPickerLoaded"
+    SelectedIndexChanged="OnFieldTypeSelected">
+                                                    <Picker.Items>
+                                                        <x:String>⚖️ Weights + Reps</x:String>
+                                                        <x:String>⏱️ Time + Difficulty</x:String>
+                                                        <x:String>🔄 Reps Only</x:String>
+                                                        <x:String>✏️ Custom</x:String>
+                                                    </Picker.Items>
+                                                </Picker>
+                                            </Grid>
+
+                                            <!-- Column headers - Weights and Reps -->
+                                            <Grid ColumnDefinitions="Auto,*,*" ColumnSpacing="8"
+                        IsVisible="{Binding IsWeightsAndReps}">
                                                 <Label Grid.Column="0" Text="SET" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5" WidthRequest="30"/>
                                                 <Label Grid.Column="1" Text="WEIGHT (kg)" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5" HorizontalOptions="Center"/>
                                                 <Label Grid.Column="2" Text="REPS" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5" HorizontalOptions="Center"/>
+                                            </Grid>
+
+                                            <!-- Column headers - Time and Difficulty -->
+                                            <Grid ColumnDefinitions="Auto,*,*" ColumnSpacing="8"
+                        IsVisible="{Binding IsTimeAndDifficulty}">
+                                                <Label Grid.Column="0" Text="SET" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5" WidthRequest="30"/>
+                                                <Label Grid.Column="1" Text="TIME" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5" HorizontalOptions="Center"/>
+                                                <Label Grid.Column="2" Text="DIFFICULTY" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5" HorizontalOptions="Center"/>
+                                            </Grid>
+
+                                            <!-- Column headers - Reps Only -->
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8"
+                        IsVisible="{Binding IsRepsOnly}">
+                                                <Label Grid.Column="0" Text="SET" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5" WidthRequest="30"/>
+                                                <Label Grid.Column="1" Text="REPS" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5" HorizontalOptions="Center"/>
+                                            </Grid>
+
+                                            <!-- Column headers - Custom -->
+                                            <Grid ColumnDefinitions="Auto,*,*" ColumnSpacing="8"
+    IsVisible="{Binding IsCustom}">
+                                                <Label Grid.Column="0" Text="SET" FontSize="10" FontAttributes="Bold" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5" WidthRequest="30"/>
+                                                <Border
+        Grid.Column="1"
+        BackgroundColor="{StaticResource SurfaceBackground}"
+        StrokeThickness="0.5"
+        Stroke="{StaticResource BorderColor}"
+        StrokeShape="RoundRectangle 6"
+        Padding="6,2">
+                                                    <Entry
+            Text="{Binding CustomLabel1}"
+            Placeholder="Field 1 name"
+            FontSize="11"
+            FontAttributes="Bold"
+            TextColor="{StaticResource SecondaryText}"
+            BackgroundColor="Transparent"
+            HorizontalTextAlignment="Center"/>
+                                                </Border>
+                                                <Border
+        Grid.Column="2"
+        BackgroundColor="{StaticResource SurfaceBackground}"
+        StrokeThickness="0.5"
+        Stroke="{StaticResource BorderColor}"
+        StrokeShape="RoundRectangle 6"
+        Padding="6,2">
+                                                    <Entry
+            Text="{Binding CustomLabel2}"
+            Placeholder="Field 2 name"
+            FontSize="11"
+            FontAttributes="Bold"
+            TextColor="{StaticResource SecondaryText}"
+            BackgroundColor="Transparent"
+            HorizontalTextAlignment="Center"/>
+                                                </Border>
                                             </Grid>
 
                                             <!-- Sets list -->
                                             <CollectionView ItemsSource="{Binding Sets}" SelectionMode="None">
                                                 <CollectionView.ItemTemplate>
                                                     <DataTemplate x:DataType="models:ExerciseSet">
-                                                        <Grid ColumnDefinitions="Auto,*,*" ColumnSpacing="8" Margin="0,2">
-                                                            <Label
-                                                                Grid.Column="0"
-                                                                FontSize="13"
-                                                                FontAttributes="Bold"
-                                                                TextColor="{StaticResource GaaGreen}"
-                                                                VerticalOptions="Center"
-                                                                WidthRequest="30"
-                                                                HorizontalOptions="Center"/>
-                                                            <Border
-                                                                Grid.Column="1"
-                                                                BackgroundColor="{StaticResource SurfaceBackground}"
-                                                                StrokeThickness="0.5"
-                                                                Stroke="{StaticResource BorderColor}"
-                                                                StrokeShape="RoundRectangle 8"
-                                                                Padding="8,6">
-                                                                <Entry
-                                                                    Text="{Binding Weight}"
-                                                                    Placeholder="0"
-                                                                    FontSize="15"
-                                                                    FontAttributes="Bold"
-                                                                    Keyboard="Numeric"
-                                                                    TextColor="{StaticResource PrimaryText}"
-                                                                    BackgroundColor="Transparent"
-                                                                    HorizontalTextAlignment="Center"/>
-                                                            </Border>
-                                                            <Border
-                                                                Grid.Column="2"
-                                                                BackgroundColor="{StaticResource SurfaceBackground}"
-                                                                StrokeThickness="0.5"
-                                                                Stroke="{StaticResource BorderColor}"
-                                                                StrokeShape="RoundRectangle 8"
-                                                                Padding="8,6">
-                                                                <Entry
-                                                                    Text="{Binding Reps}"
-                                                                    Placeholder="0"
-                                                                    FontSize="15"
-                                                                    FontAttributes="Bold"
-                                                                    Keyboard="Numeric"
-                                                                    TextColor="{StaticResource PrimaryText}"
-                                                                    BackgroundColor="Transparent"
-                                                                    HorizontalTextAlignment="Center"/>
-                                                            </Border>
-                                                        </Grid>
+
+                                                        <!-- Weights and Reps -->
+                                                        <VerticalStackLayout>
+                                                            <Grid ColumnDefinitions="Auto,*,*" ColumnSpacing="8" Margin="0,2"
+                                        IsVisible="{Binding Source={RelativeSource AncestorType={x:Type models:CompletedExercise}}, Path=IsWeightsAndReps}">
+                                                                <Label
+                                            Grid.Column="0"
+                                            FontSize="13"
+                                            FontAttributes="Bold"
+                                            TextColor="{StaticResource GaaGreen}"
+                                            VerticalOptions="Center"
+                                            WidthRequest="30"
+                                            HorizontalOptions="Center"/>
+                                                                <Border Grid.Column="1"
+                                            BackgroundColor="{StaticResource SurfaceBackground}"
+                                            StrokeThickness="0.5"
+                                            Stroke="{StaticResource BorderColor}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Padding="8,6">
+                                                                    <Entry
+                                                Text="{Binding Weight}"
+                                                Placeholder="0"
+                                                FontSize="15"
+                                                FontAttributes="Bold"
+                                                Keyboard="Numeric"
+                                                TextColor="{StaticResource PrimaryText}"
+                                                BackgroundColor="Transparent"
+                                                HorizontalTextAlignment="Center"
+                                                Completed="OnWeightCompleted"
+                                                Unfocused="OnWeightCompleted"/>
+                                                                </Border>
+                                                                <Border Grid.Column="2"
+                                            BackgroundColor="{StaticResource SurfaceBackground}"
+                                            StrokeThickness="0.5"
+                                            Stroke="{StaticResource BorderColor}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Padding="8,6">
+                                                                    <Entry
+                                                Text="{Binding Reps}"
+                                                Placeholder="0"
+                                                FontSize="15"
+                                                FontAttributes="Bold"
+                                                Keyboard="Numeric"
+                                                TextColor="{StaticResource PrimaryText}"
+                                                BackgroundColor="Transparent"
+                                                HorizontalTextAlignment="Center"
+                                                Completed="OnRepsCompleted"
+                                                Unfocused="OnRepsCompleted"/>
+                                                                </Border>
+                                                            </Grid>
+
+                                                            <!-- Time and Difficulty -->
+                                                            <Grid ColumnDefinitions="Auto,*,*" ColumnSpacing="8" Margin="0,2"
+                                        IsVisible="{Binding Source={RelativeSource AncestorType={x:Type models:CompletedExercise}}, Path=IsTimeAndDifficulty}">
+                                                                <Label
+                                            Grid.Column="0"
+                                            FontSize="13"
+                                            FontAttributes="Bold"
+                                            TextColor="{StaticResource GaaGreen}"
+                                            VerticalOptions="Center"
+                                            WidthRequest="30"
+                                            HorizontalOptions="Center"/>
+                                                                <Border Grid.Column="1"
+                                            BackgroundColor="{StaticResource SurfaceBackground}"
+                                            StrokeThickness="0.5"
+                                            Stroke="{StaticResource BorderColor}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Padding="8,6">
+                                                                    <Entry
+                                                Text="{Binding Time}"
+                                                Placeholder="e.g. 45 mins"
+                                                FontSize="14"
+                                                TextColor="{StaticResource PrimaryText}"
+                                                BackgroundColor="Transparent"
+                                                HorizontalTextAlignment="Center"
+                                                Completed="OnTimeCompleted"
+                                                Unfocused="OnTimeCompleted"/>
+                                                                </Border>
+                                                                <Border Grid.Column="2"
+                                            BackgroundColor="{StaticResource SurfaceBackground}"
+                                            StrokeThickness="0.5"
+                                            Stroke="{StaticResource BorderColor}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Padding="8,6">
+                                                                    <Entry
+                                                Text="{Binding Difficulty}"
+                                                Placeholder="1-10"
+                                                FontSize="15"
+                                                FontAttributes="Bold"
+                                                Keyboard="Numeric"
+                                                TextColor="{StaticResource PrimaryText}"
+                                                BackgroundColor="Transparent"
+                                                HorizontalTextAlignment="Center"
+                                                Completed="OnDifficultyCompleted"
+                                                Unfocused="OnDifficultyCompleted"/>
+                                                                </Border>
+                                                            </Grid>
+
+                                                            <!-- Reps Only -->
+                                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" Margin="0,2"
+                                        IsVisible="{Binding Source={RelativeSource AncestorType={x:Type models:CompletedExercise}}, Path=IsRepsOnly}">
+                                                                <Label
+                                            Grid.Column="0"
+                                            FontSize="13"
+                                            FontAttributes="Bold"
+                                            TextColor="{StaticResource GaaGreen}"
+                                            VerticalOptions="Center"
+                                            WidthRequest="30"
+                                            HorizontalOptions="Center"/>
+                                                                <Border Grid.Column="1"
+                                            BackgroundColor="{StaticResource SurfaceBackground}"
+                                            StrokeThickness="0.5"
+                                            Stroke="{StaticResource BorderColor}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Padding="8,6">
+                                                                    <Entry
+                                                Text="{Binding Reps}"
+                                                Placeholder="0"
+                                                FontSize="15"
+                                                FontAttributes="Bold"
+                                                Keyboard="Numeric"
+                                                TextColor="{StaticResource PrimaryText}"
+                                                BackgroundColor="Transparent"
+                                                HorizontalTextAlignment="Center"/>
+                                                                </Border>
+                                                            </Grid>
+
+                                                            <!-- Custom -->
+                                                            <Grid ColumnDefinitions="Auto,*,*" ColumnSpacing="8" Margin="0,2"
+                                        IsVisible="{Binding Source={RelativeSource AncestorType={x:Type models:CompletedExercise}}, Path=IsCustom}">
+                                                                <Label
+                                            Grid.Column="0"
+                                            FontSize="13"
+                                            FontAttributes="Bold"
+                                            TextColor="{StaticResource GaaGreen}"
+                                            VerticalOptions="Center"
+                                            WidthRequest="30"
+                                            HorizontalOptions="Center"/>
+                                                                <Border Grid.Column="1"
+                                            BackgroundColor="{StaticResource SurfaceBackground}"
+                                            StrokeThickness="0.5"
+                                            Stroke="{StaticResource BorderColor}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Padding="8,6">
+                                                                    <Entry
+                                                Text="{Binding CustomField1}"
+                                                Placeholder="Value 1"
+                                                FontSize="15"
+                                                TextColor="{StaticResource PrimaryText}"
+                                                BackgroundColor="Transparent"
+                                                HorizontalTextAlignment="Center"/>
+                                                                </Border>
+                                                                <Border Grid.Column="2"
+                                            BackgroundColor="{StaticResource SurfaceBackground}"
+                                            StrokeThickness="0.5"
+                                            Stroke="{StaticResource BorderColor}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Padding="8,6">
+                                                                    <Entry
+                                                Text="{Binding CustomField2}"
+                                                Placeholder="Value 2"
+                                                FontSize="15"
+                                                TextColor="{StaticResource PrimaryText}"
+                                                BackgroundColor="Transparent"
+                                                HorizontalTextAlignment="Center"/>
+                                                                </Border>
+                                                            </Grid>
+                                                        </VerticalStackLayout>
+
                                                     </DataTemplate>
                                                 </CollectionView.ItemTemplate>
                                             </CollectionView>
 
-                                            <!-- Add/remove set button -->
                                             <!-- Add/Remove set buttons -->
                                             <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="8">
                                                 <Button
-        Grid.Column="0"
-        Text="+ Add Set"
-        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveSessionViewModel}}, Path=AddSetCommand}"
-        CommandParameter="{Binding .}"
-        BackgroundColor="Transparent"
-        TextColor="{StaticResource GaaGreen}"
-        FontSize="13"
-        FontAttributes="Bold"
-        HorizontalOptions="Start"
-        Padding="0"/>
+                            Grid.Column="0"
+                            Text="+ Add Set"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveSessionViewModel}}, Path=AddSetCommand}"
+                            CommandParameter="{Binding .}"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource GaaGreen}"
+                            FontSize="13"
+                            FontAttributes="Bold"
+                            HorizontalOptions="Start"
+                            Padding="0"/>
                                                 <Button
-        Grid.Column="1"
-        Text="− Remove Set"
-        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveSessionViewModel}}, Path=RemoveSetCommand}"
-        CommandParameter="{Binding .}"
-        BackgroundColor="Transparent"
-        TextColor="#c62828"
-        FontSize="13"
-        FontAttributes="Bold"
-        HorizontalOptions="Start"
-        Padding="0"/>
+                            Grid.Column="1"
+                            Text="− Remove Set"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveSessionViewModel}}, Path=RemoveSetCommand}"
+                            CommandParameter="{Binding .}"
+                            BackgroundColor="Transparent"
+                            TextColor="#c62828"
+                            FontSize="13"
+                            FontAttributes="Bold"
+                            HorizontalOptions="Start"
+                            Padding="0"/>
                                             </Grid>
 
                                         </VerticalStackLayout>

@@ -91,9 +91,15 @@ public partial class ActiveSessionViewModel : ObservableObject
     [RelayCommand]
     private void AddSet(CompletedExercise exercise)
     {
+        var lastSet = exercise.Sets.LastOrDefault();
         exercise.Sets.Add(new ExerciseSet
         {
-            Reps = exercise.Sets.LastOrDefault()?.Reps ?? string.Empty
+            Weight = lastSet?.Weight ?? string.Empty,
+            Reps = lastSet?.Reps ?? string.Empty,
+            Time = lastSet?.Time ?? string.Empty,
+            Difficulty = lastSet?.Difficulty ?? string.Empty,
+            CustomField1 = lastSet?.CustomField1 ?? string.Empty,
+            CustomField2 = lastSet?.CustomField2 ?? string.Empty
         });
     }
 
@@ -217,6 +223,78 @@ public partial class ActiveSessionViewModel : ObservableObject
 
         var checkKey = $"completed_{_day!.Date.Date:yyyy-MM-dd}";
         System.Diagnostics.Debug.WriteLine($"VERIFY after save: {Preferences.Get(checkKey, false)}");
+    }
+
+    [RelayCommand]
+    private void ChangeFieldType(CompletedExercise exercise)
+    {
+        // Cycle through field types
+        exercise.FieldType = exercise.FieldType switch
+        {
+            ExerciseFieldType.WeightsAndReps => ExerciseFieldType.TimeAndDifficulty,
+            ExerciseFieldType.TimeAndDifficulty => ExerciseFieldType.RepsOnly,
+            ExerciseFieldType.RepsOnly => ExerciseFieldType.Custom,
+            _ => ExerciseFieldType.WeightsAndReps
+        };
+
+        RefreshExercise(exercise);
+    }
+
+    public void RefreshExercise(CompletedExercise exercise)
+    {
+        var index = CurrentExercises.IndexOf(exercise);
+        if (index >= 0)
+        {
+            var refreshed = new CompletedExercise
+            {
+                Name = exercise.Name,
+                CoachNotes = exercise.CoachNotes,
+                IsCompleted = exercise.IsCompleted,
+                FieldType = exercise.FieldType,
+                CustomLabel1 = exercise.CustomLabel1,
+                CustomLabel2 = exercise.CustomLabel2,
+                Sets = exercise.Sets
+            };
+            CurrentExercises.RemoveAt(index);
+            CurrentExercises.Insert(index, refreshed);
+        }
+    }
+
+    public void OnWeightChanged(CompletedExercise exercise, int setIndex, string value)
+    {
+        // Auto-fill subsequent empty sets
+        for (int i = setIndex + 1; i < exercise.Sets.Count; i++)
+        {
+            if (string.IsNullOrEmpty(exercise.Sets[i].Weight))
+                exercise.Sets[i].Weight = value;
+        }
+    }
+
+    public void OnRepsChanged(CompletedExercise exercise, int setIndex, string value)
+    {
+        for (int i = setIndex + 1; i < exercise.Sets.Count; i++)
+        {
+            if (string.IsNullOrEmpty(exercise.Sets[i].Reps))
+                exercise.Sets[i].Reps = value;
+        }
+    }
+
+    public void OnTimeChanged(CompletedExercise exercise, int setIndex, string value)
+    {
+        for (int i = setIndex + 1; i < exercise.Sets.Count; i++)
+        {
+            if (string.IsNullOrEmpty(exercise.Sets[i].Time))
+                exercise.Sets[i].Time = value;
+        }
+    }
+
+    public void OnDifficultyChanged(CompletedExercise exercise, int setIndex, string value)
+    {
+        for (int i = setIndex + 1; i < exercise.Sets.Count; i++)
+        {
+            if (string.IsNullOrEmpty(exercise.Sets[i].Difficulty))
+                exercise.Sets[i].Difficulty = value;
+        }
     }
 
     public void Cleanup()

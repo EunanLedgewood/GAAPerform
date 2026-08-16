@@ -2,6 +2,14 @@
 
 namespace GAAPerform.Models;
 
+public enum ExerciseFieldType
+{
+    WeightsAndReps,
+    TimeAndDifficulty,
+    RepsOnly,
+    Custom
+}
+
 public class CompletedSet
 {
     public int SetNumber { get; set; }
@@ -12,6 +20,10 @@ public class ExerciseSet
 {
     public string Weight { get; set; } = string.Empty;
     public string Reps { get; set; } = string.Empty;
+    public string Time { get; set; } = string.Empty;
+    public string Difficulty { get; set; } = string.Empty;
+    public string CustomField1 { get; set; } = string.Empty;
+    public string CustomField2 { get; set; } = string.Empty;
     public bool IsCompleted { get; set; } = false;
 }
 
@@ -22,7 +34,16 @@ public class CompletedExercise
     public string ActualWeight { get; set; } = string.Empty;
     public string ActualReps { get; set; } = string.Empty;
     public bool IsCompleted { get; set; } = false;
+    public ExerciseFieldType FieldType { get; set; } = ExerciseFieldType.WeightsAndReps;
+    public string CustomLabel1 { get; set; } = "Field 1";
+    public string CustomLabel2 { get; set; } = "Field 2";
     public ObservableCollection<ExerciseSet> Sets { get; set; } = new() { new ExerciseSet() };
+
+    // Computed properties for display
+    public bool IsWeightsAndReps => FieldType == ExerciseFieldType.WeightsAndReps;
+    public bool IsTimeAndDifficulty => FieldType == ExerciseFieldType.TimeAndDifficulty;
+    public bool IsRepsOnly => FieldType == ExerciseFieldType.RepsOnly;
+    public bool IsCustom => FieldType == ExerciseFieldType.Custom;
 }
 
 public class CompletedSession
@@ -36,19 +57,16 @@ public class CompletedSession
     public string PlayerComment { get; set; } = string.Empty;
     public string CoachEmail { get; set; } = string.Empty;
     public bool IsSharedWithCoach { get; set; } = false;
+    public bool IsExpanded { get; set; } = false;
 
     [SQLite.Ignore]
     public List<CompletedSet> Sets { get; set; } = new();
 
-    // Store sets as JSON string in SQLite
     public string SetsJson { get; set; } = string.Empty;
 
     [SQLite.Ignore]
     public string DurationFormatted =>
         $"{DurationSeconds / 3600:00}:{(DurationSeconds % 3600) / 60:00}:{DurationSeconds % 60:00}";
-
-    [SQLite.Ignore]
-    public bool IsExpanded { get; set; } = false;
 
     [SQLite.Ignore]
     public string SessionTypeIcon => SessionType switch

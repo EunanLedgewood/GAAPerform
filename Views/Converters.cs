@@ -157,3 +157,20 @@ public class ExpandCollapseTextConverter : IValueConverter
     public object ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
         => throw new NotImplementedException();
 }
+
+public class ExerciseFieldTypeToLabelConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+    {
+        return value is ExerciseFieldType type ? type switch
+        {
+            ExerciseFieldType.WeightsAndReps => "⚖️ Weights",
+            ExerciseFieldType.TimeAndDifficulty => "⏱️ Cardio",
+            ExerciseFieldType.RepsOnly => "🔄 Bodyweight",
+            ExerciseFieldType.Custom => "✏️ Custom",
+            _ => "⚖️ Weights"
+        } : "⚖️ Weights";
+    }
+    public object ConvertBack(object? value, Type targetType, object? parameter, System.Globalization.CultureInfo culture)
+        => throw new NotImplementedException();
+}
