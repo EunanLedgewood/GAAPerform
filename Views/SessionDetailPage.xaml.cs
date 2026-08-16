@@ -40,4 +40,15 @@ public partial class SessionDetailPage : ContentPage
         activePage.LoadSession(_day, detail);
         await Navigation.PushAsync(activePage);
     }
+
+    private async void OnWatchVideoTapped(object? sender, EventArgs e)
+    {
+        if (sender is Button btn && btn.BindingContext is Exercise exercise)
+        {
+            if (!string.IsNullOrEmpty(exercise.VideoUrl))
+            {
+                await Launcher.OpenAsync(new Uri(exercise.VideoUrl));
+            }
+        }
+    }
 }

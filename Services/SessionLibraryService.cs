@@ -98,14 +98,14 @@ public class SessionLibraryService
             Intensity = "High",
             Type = SessionType.Strength,
             Exercises = new()
-            {
-                new Exercise { Name = "Warm up", Duration = "5 min", Notes = "Light cardio and mobility" },
-                new Exercise { Name = "Back Squat", Sets = "4", Reps = "6", Notes = "70-80% max" },
-                new Exercise { Name = "Bench Press", Sets = "4", Reps = "8", Notes = "Moderate weight, full range" },
-                new Exercise { Name = "Deadlift", Sets = "3", Reps = "5", Notes = "Heavy — brace your core" },
-                new Exercise { Name = "Chin Ups", Sets = "3", Reps = "8", Notes = "Add weight if needed" },
-                new Exercise { Name = "Farmer Carries", Sets = "4", Reps = "30m", Notes = "Heavy dumbbells, tall posture" }
-            },
+    {
+        new Exercise { Name = "Warm up", Duration = "5 min", Notes = "Light cardio and mobility" },
+        new Exercise { Name = "Back Squat", Sets = "4", Reps = "6", Notes = "70-80% max", VideoUrl = "https://www.youtube.com/watch?v=rrJIyZGlK8c" },
+        new Exercise { Name = "Bench Press", Sets = "4", Reps = "8", Notes = "Moderate weight, full range", VideoUrl = "https://www.youtube.com/watch?v=rT7DgCr-3pg" },
+        new Exercise { Name = "Deadlift", Sets = "3", Reps = "5", Notes = "Heavy — brace your core", VideoUrl = "https://www.youtube.com/watch?v=op9kVnSso6Q" },
+        new Exercise { Name = "Chin Ups", Sets = "3", Reps = "8", Notes = "Add weight if needed", VideoUrl = "https://www.youtube.com/watch?v=eGo4IYlbE5g" },
+        new Exercise { Name = "Farmer Carries", Sets = "4", Reps = "30m", Notes = "Heavy dumbbells, tall posture", VideoUrl = "https://www.youtube.com/watch?v=Fkzk_RqlYig" }
+    },
             CoachNotes = new() { "Rest 90 seconds between sets", "Focus on form before adding weight" }
         }
     };
@@ -217,11 +217,11 @@ public class SessionLibraryService
         Intensity = "Very Low",
         Type = SessionType.Recovery,
         Exercises = new()
-        {
-            new Exercise { Name = "Light walk or cycle", Duration = "10 min", Notes = "Very easy — just moving" },
-            new Exercise { Name = "Foam rolling", Duration = "10 min", Notes = "Quads, hamstrings, calves, glutes" },
-            new Exercise { Name = "Static stretching", Duration = "10 min", Notes = "Hold each stretch 30-45 seconds" }
-        },
+    {
+        new Exercise { Name = "Light walk or cycle", Duration = "10 min", Notes = "Very easy — just moving" },
+        new Exercise { Name = "Foam rolling", Duration = "10 min", Notes = "Quads, hamstrings, calves, glutes", VideoUrl = "https://www.youtube.com/watch?v=nt67KBSEcUU" },
+        new Exercise { Name = "Static stretching", Duration = "10 min", Notes = "Hold each stretch 30-45 seconds", VideoUrl = "https://www.youtube.com/watch?v=L_xrDAtykMI" }
+    },
         CoachNotes = new() { "Hydrate well today", "Sleep is the best recovery tool — get 8 hours" }
     };
 

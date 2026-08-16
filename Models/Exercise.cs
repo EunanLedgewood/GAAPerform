@@ -8,6 +8,7 @@ public class Exercise
     public string Duration { get; set; } = string.Empty;
     public string Notes { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;
+    public string VideoUrl { get; set; } = string.Empty;
 }
 
 public class SessionDetail
