@@ -26,6 +26,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<SessionLibraryService>();
         builder.Services.AddSingleton<FirebaseAuthService>();
         builder.Services.AddSingleton<FirestoreService>();
+        builder.Services.AddSingleton<ExerciseCacheService>();
 
         // ViewModels
         builder.Services.AddTransient<WeekViewModel>();

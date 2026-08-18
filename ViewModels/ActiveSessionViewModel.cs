@@ -76,8 +76,12 @@ public partial class ActiveSessionViewModel : ObservableObject
         {
             Name = e.Name,
             CoachNotes = e.Notes,
+            VideoUrl = e.VideoUrl,
             Sets = new ObservableCollection<ExerciseSet> { new ExerciseSet { Reps = e.Reps } }
         }).ToList();
+
+        foreach (var ex in completedExercises)
+            System.Diagnostics.Debug.WriteLine($"Exercise: {ex.Name} VideoUrl: {ex.VideoUrl}");
 
         sets.Add(new CompletedSet
         {
@@ -266,6 +270,27 @@ public partial class ActiveSessionViewModel : ObservableObject
         };
 
         RefreshExercise(exercise);
+    }
+
+    [RelayCommand]
+    private async Task WatchExerciseVideo(CompletedExercise exercise)
+    {
+        var url = exercise.EffectiveVideoUrl;
+        if (string.IsNullOrEmpty(url)) return;
+
+        // Convert YouTube watch URL to embed URL to prevent YouTube app interception
+        if (url.Contains("youtube.com/watch?v="))
+        {
+            var videoId = url.Split("v=")[1].Split("&")[0];
+            url = $"https://www.youtube-nocookie.com/embed/{videoId}";
+        }
+        else if (url.Contains("youtu.be/"))
+        {
+            var videoId = url.Split("youtu.be/")[1].Split("?")[0];
+            url = $"https://www.youtube-nocookie.com/embed/{videoId}";
+        }
+
+        await Browser.Default.OpenAsync(url, BrowserLaunchMode.SystemPreferred);
     }
 
     public void RefreshExercise(CompletedExercise exercise)

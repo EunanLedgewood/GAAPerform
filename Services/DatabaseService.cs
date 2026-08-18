@@ -22,6 +22,7 @@ public class DatabaseService
         await _db.CreateTableAsync<UserProfile>();
         await _db.CreateTableAsync<CalendarEvent>();
         await _db.CreateTableAsync<CompletedSession>();
+        await _db.CreateTableAsync<CachedExercise>();
     }
 
     public async Task<UserProfile> GetProfileAsync()
@@ -217,5 +218,48 @@ public class DatabaseService
             }
         }
         return sessions;
+    }
+
+    public async Task CacheExercisesAsync(List<FirebaseExercise> exercises)
+    {
+        await InitAsync();
+        await _db!.ExecuteAsync("DELETE FROM CachedExercise");
+        foreach (var exercise in exercises)
+        {
+            await _db.InsertAsync(new CachedExercise
+            {
+                ExerciseId = exercise.Id,
+                Name = exercise.Name,
+                Category = exercise.Category,
+                DefaultSets = exercise.DefaultSets,
+                DefaultReps = exercise.DefaultReps,
+                DefaultDuration = exercise.DefaultDuration,
+                Notes = exercise.Notes,
+                VideoUrl = exercise.VideoUrl,
+                PositionsJson = System.Text.Json.JsonSerializer.Serialize(exercise.Positions),
+                SessionTypesJson = System.Text.Json.JsonSerializer.Serialize(exercise.SessionTypes)
+            });
+        }
+    }
+
+    public async Task<List<FirebaseExercise>> GetCachedExercisesAsync()
+    {
+        await InitAsync();
+        var cached = await _db!.Table<CachedExercise>().ToListAsync();
+        return cached.Select(c => new FirebaseExercise
+        {
+            Id = c.ExerciseId,
+            Name = c.Name,
+            Category = c.Category,
+            DefaultSets = c.DefaultSets,
+            DefaultReps = c.DefaultReps,
+            DefaultDuration = c.DefaultDuration,
+            Notes = c.Notes,
+            VideoUrl = c.VideoUrl,
+            Positions = System.Text.Json.JsonSerializer
+                .Deserialize<List<string>>(c.PositionsJson) ?? new(),
+            SessionTypes = System.Text.Json.JsonSerializer
+                .Deserialize<List<string>>(c.SessionTypesJson) ?? new()
+        }).ToList();
     }
 }

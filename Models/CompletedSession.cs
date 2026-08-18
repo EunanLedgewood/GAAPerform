@@ -37,13 +37,20 @@ public class CompletedExercise
     public ExerciseFieldType FieldType { get; set; } = ExerciseFieldType.WeightsAndReps;
     public string CustomLabel1 { get; set; } = "Field 1";
     public string CustomLabel2 { get; set; } = "Field 2";
+    public string VideoUrl { get; set; } = string.Empty;
+    public string CustomVideoUrl { get; set; } = string.Empty;
     public ObservableCollection<ExerciseSet> Sets { get; set; } = new() { new ExerciseSet() };
 
-    // Computed properties for display
     public bool IsWeightsAndReps => FieldType == ExerciseFieldType.WeightsAndReps;
     public bool IsTimeAndDifficulty => FieldType == ExerciseFieldType.TimeAndDifficulty;
     public bool IsRepsOnly => FieldType == ExerciseFieldType.RepsOnly;
     public bool IsCustom => FieldType == ExerciseFieldType.Custom;
+
+    public string EffectiveVideoUrl => !string.IsNullOrEmpty(CustomVideoUrl)
+        ? CustomVideoUrl
+        : VideoUrl;
+
+    public bool HasVideo => !string.IsNullOrEmpty(EffectiveVideoUrl);
 }
 
 public class CompletedSession

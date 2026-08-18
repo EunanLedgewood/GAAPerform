@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using GAAPerform.Auth;
 using GAAPerform.Models;
 using GAAPerform.Services;
 using System.Collections.ObjectModel;
@@ -9,6 +10,7 @@ public partial class SessionDetailViewModel : ObservableObject
 {
     private readonly SessionLibraryService _library;
     private readonly DatabaseService _db;
+    private readonly ExerciseCacheService _exerciseCache;
 
     [ObservableProperty] private string sessionTitle = string.Empty;
     [ObservableProperty] private string sessionDescription = string.Empty;
@@ -21,10 +23,14 @@ public partial class SessionDetailViewModel : ObservableObject
     [ObservableProperty] private bool hasExercises;
     [ObservableProperty] private bool isRestDay;
 
-    public SessionDetailViewModel(SessionLibraryService library, DatabaseService db)
+    public SessionDetailViewModel(
+        SessionLibraryService library,
+        DatabaseService db,
+        ExerciseCacheService exerciseCache)
     {
         _library = library;
         _db = db;
+        _exerciseCache = exerciseCache;
     }
 
     public async Task LoadAsync(TrainingDay day)
@@ -37,7 +43,6 @@ public partial class SessionDetailViewModel : ObservableObject
         SessionDuration = detail.Duration;
         SessionIntensity = detail.Intensity;
         IsRestDay = day.Type == SessionType.Rest;
-        HasExercises = detail.Exercises.Any();
         HasCoachNotes = detail.CoachNotes.Any();
 
         SessionIcon = day.Type switch
@@ -50,7 +55,45 @@ public partial class SessionDetailViewModel : ObservableObject
             _ => "😴"
         };
 
-        Exercises = new ObservableCollection<Exercise>(detail.Exercises);
+        // Try to get exercises from Firebase first
+        try
+        {
+            var sessionTypeName = day.Type.ToString();
+            var positionName = profile.Position.ToString();
+            var firebaseExercises = await _exerciseCache
+                .GetExercisesForSessionAsync(sessionTypeName, positionName);
+
+            System.Diagnostics.Debug.WriteLine($"Firebase exercises count: {firebaseExercises.Count}");
+            foreach (var ex in firebaseExercises)
+                System.Diagnostics.Debug.WriteLine($"Firebase exercise: {ex.Name} VideoUrl: {ex.VideoUrl}");
+
+            if (firebaseExercises.Any())
+            {
+                var mapped = firebaseExercises.Select(e => new Exercise
+                {
+                    Name = e.Name,
+                    Sets = e.DefaultSets,
+                    Reps = e.DefaultReps,
+                    Duration = e.DefaultDuration,
+                    Notes = e.Notes,
+                    VideoUrl = e.VideoUrl
+                }).ToList();
+
+                Exercises = new ObservableCollection<Exercise>(mapped);
+                HasExercises = true;
+            }
+            else
+            {
+                // Fall back to hardcoded library
+                Exercises = new ObservableCollection<Exercise>(detail.Exercises);
+                HasExercises = detail.Exercises.Any();
+            }
+        }
+        catch
+        {
+            Exercises = new ObservableCollection<Exercise>(detail.Exercises);
+            HasExercises = detail.Exercises.Any();
+        }
         CoachNotes = new ObservableCollection<string>(detail.CoachNotes);
     }
 }

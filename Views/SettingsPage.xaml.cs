@@ -85,4 +85,28 @@ public partial class SettingsPage : ContentPage
         Application.Current!.UserAppTheme = e.Value ? AppTheme.Dark : AppTheme.Light;
         Preferences.Set("dark_mode", e.Value);
     }
+
+    private async void OnSeedExercisesTapped(object? sender, EventArgs e)
+    {
+        bool confirm = await DisplayAlertAsync(
+            "Seed Exercise Library",
+            "This will add the default exercise library to Firebase. Only do this once.",
+            "Seed", "Cancel");
+
+        if (confirm)
+        {
+            try
+            {
+                var token = await _auth.GetTokenAsync();
+                var firestore = IPlatformApplication.Current!.Services
+                    .GetRequiredService<GAAPerform.Auth.FirestoreService>();
+                await firestore.SeedExerciseLibraryAsync(token);
+                await DisplayAlertAsync("Done", "Exercise library seeded successfully!", "OK");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlertAsync("Error", ex.Message, "OK");
+            }
+        }
+    }
 }

@@ -45,6 +45,9 @@
                     <Button Text="Privacy Policy" Clicked="OnPrivacyTapped" Style="{StaticResource SettingsButton}"/>
                     <BoxView HeightRequest="0.5" BackgroundColor="{StaticResource BorderColor}"/>
                     <Button Text="Check for Updates" Clicked="OnUpdatesTapped" Style="{StaticResource SettingsButton}"/>
+                    <Button Text="🔧 Seed Exercise Library" Clicked="OnSeedExercisesTapped"
+    BackgroundColor="Transparent" TextColor="{StaticResource SecondaryText}"
+    FontSize="13" HorizontalOptions="Fill" Padding="16,12"/>
                 </VerticalStackLayout>
             </Border>
 

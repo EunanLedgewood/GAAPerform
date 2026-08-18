@@ -16,11 +16,15 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        if (_auth.IsLoggedIn)
-            return new Window(new NavigationPage(new AppShell()));
+        bool isLoggedIn = Preferences.Get("is_logged_in", false);
 
-        var loginPage = IPlatformApplication.Current!.Services
-            .GetRequiredService<LoginPage>();
-        return new Window(new NavigationPage(loginPage));
+        if (!isLoggedIn)
+        {
+            var loginPage = IPlatformApplication.Current!.Services
+                .GetRequiredService<LoginPage>();
+            return new Window(new NavigationPage(loginPage));
+        }
+
+        return new Window(new NavigationPage(new AppShell()));
     }
 }

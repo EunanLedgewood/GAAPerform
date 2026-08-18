@@ -123,6 +123,21 @@
                         IsVisible="{Binding CoachNotes, Converter={StaticResource StringToBoolConverter}}"
                         LineHeight="1.4"/>
 
+                                            <!-- Watch video button -->
+                                            <Button
+    Text="▶ Watch"
+    BackgroundColor="#ff0000"
+    TextColor="White"
+    FontSize="11"
+    FontAttributes="Bold"
+    CornerRadius="6"
+    HeightRequest="32"
+    HorizontalOptions="Start"
+    Padding="10,0"
+    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveSessionViewModel}}, Path=WatchExerciseVideoCommand}"
+    CommandParameter="{Binding .}"
+    IsVisible="{Binding EffectiveVideoUrl, Converter={StaticResource StringToBoolConverter}}"/>
+
                                             <!-- Field type picker -->
                                             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
                                                 <Label
