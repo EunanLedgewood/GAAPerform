@@ -25,6 +25,6 @@ public partial class App : Application
             return new Window(new NavigationPage(loginPage));
         }
 
-        return new Window(new NavigationPage(new AppShell()));
+        return new Window(new AppShell());
     }
 }

@@ -20,6 +20,11 @@ public partial class ActiveSessionViewModel : ObservableObject
     [ObservableProperty] private bool isFinished = false;
     [ObservableProperty] private bool isNotFinished = true;
     [ObservableProperty] private string playerComment = string.Empty;
+    [ObservableProperty] private string sessionDescription = string.Empty;
+    [ObservableProperty] private string sessionDuration = string.Empty;
+    [ObservableProperty] private string sessionIntensity = string.Empty;
+    [ObservableProperty] private ObservableCollection<CompletedExercise> previewExercises = new();
+    [ObservableProperty] private bool isCompleting = false;
 
     // Sets navigation
     [ObservableProperty] private int currentSetIndex = 0;
@@ -42,12 +47,19 @@ public partial class ActiveSessionViewModel : ObservableObject
         _day = day;
         CompletedDay = day;
         SessionTitle = detail.Title;
+        SessionDescription = detail.Description;
+        SessionDuration = detail.Duration;
+        SessionIntensity = detail.Intensity;
         SessionType = day.Type;
 
-        // Group exercises into sets of 3 (or use natural grouping)
         _allSets = GroupExercisesIntoSets(detail.Exercises);
         TotalSets = _allSets.Count;
         CurrentSetIndex = 0;
+
+        // Preview exercises for overview screen
+        PreviewExercises = new ObservableCollection<CompletedExercise>(
+            _allSets.SelectMany(s => s.Exercises).Take(10).ToList());
+
         UpdateCurrentSet();
     }
 
@@ -193,69 +205,93 @@ public partial class ActiveSessionViewModel : ObservableObject
     [RelayCommand]
     private async Task CompleteSessionAsync()
     {
-        _allSets[CurrentSetIndex].Exercises = CurrentExercises.ToList();
-
-        var completed = new CompletedSession
+        if (IsCompleting) return;
+        IsCompleting = true;
+        System.Diagnostics.Debug.WriteLine("CompleteSessionAsync called");
+        try
         {
-            Date = DateTime.Now,
-            SessionTitle = SessionTitle,
-            SessionType = SessionType,
-            DurationSeconds = _elapsedSeconds,
-            PlayerComment = PlayerComment,
-            Sets = _allSets
-        };
+            if (_allSets.Any() && CurrentSetIndex < _allSets.Count)
+                _allSets[CurrentSetIndex].Exercises = CurrentExercises.ToList();
 
-        await _db.SaveCompletedSessionAsync(completed);
-
-        await _db.SaveLogAsync(new Models.SessionLog
-        {
-            Date = DateTime.Now,
-            FeelingScore = 3,
-            SorenessScore = 2,
-            SessionType = SessionType
-        });
-
-        // Mark the day as completed in calendar
-        if (_day is not null)
-        {
-            var key = $"completed_{_day.Date.Date:yyyy-MM-dd}";
-            Preferences.Set(key, true);
-            System.Diagnostics.Debug.WriteLine($"SAVED key: {key}");
-        }
-
-        await Application.Current!.Windows[0].Page!.Navigation.PopToRootAsync();
-
-        var checkKey = $"completed_{_day!.Date.Date:yyyy-MM-dd}";
-        System.Diagnostics.Debug.WriteLine($"VERIFY after save: {Preferences.Get(checkKey, false)}");
-
-        // Share with coach via Firebase if player has a comment
-        if (!string.IsNullOrEmpty(PlayerComment))
-        {
-            try
+            var completed = new CompletedSession
             {
-                var auth = IPlatformApplication.Current!.Services
-                    .GetRequiredService<GAAPerform.Auth.FirebaseAuthService>();
-                var firestore = IPlatformApplication.Current.Services
-                    .GetRequiredService<GAAPerform.Auth.FirestoreService>();
+                Date = DateTime.Now,
+                SessionTitle = SessionTitle,
+                SessionType = SessionType,
+                DurationSeconds = _elapsedSeconds,
+                PlayerComment = PlayerComment,
+                Sets = _allSets
+            };
 
-                if (auth.IsLoggedIn && auth.CurrentUserEmail is not null)
+            await _db.SaveCompletedSessionAsync(completed);
+            System.Diagnostics.Debug.WriteLine("Session saved to DB");
+
+            await _db.SaveLogAsync(new Models.SessionLog
+            {
+                Date = DateTime.Now,
+                FeelingScore = 3,
+                SorenessScore = 2,
+                SessionType = SessionType
+            });
+
+            if (_day is not null)
+            {
+                var key = $"completed_{_day.Date.Date:yyyy-MM-dd}";
+                Preferences.Set(key, true);
+                System.Diagnostics.Debug.WriteLine($"Completion saved: {key}");
+            }
+
+            if (!string.IsNullOrEmpty(PlayerComment))
+            {
+                try
                 {
-                    var token = await auth.GetTokenAsync();
-                    await firestore.SavePlayerSessionResultAsync(
-                        auth.CurrentUserEmail,
-                        SessionTitle,
-                        DateTime.Now,
-                        _elapsedSeconds,
-                        PlayerComment,
-                        token);
+                    var auth = IPlatformApplication.Current!.Services
+                        .GetRequiredService<GAAPerform.Auth.FirebaseAuthService>();
+                    var firestore = IPlatformApplication.Current.Services
+                        .GetRequiredService<GAAPerform.Auth.FirestoreService>();
+
+                    if (auth.IsLoggedIn && auth.CurrentUserEmail is not null)
+                    {
+                        var token = await auth.GetTokenAsync();
+                        await firestore.SavePlayerSessionResultAsync(
+                            auth.CurrentUserEmail,
+                            SessionTitle,
+                            DateTime.Now,
+                            _elapsedSeconds,
+                            PlayerComment,
+                            token);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Firebase save error: {ex.Message}");
                 }
             }
-            catch (Exception ex)
+
+            var page = Application.Current?.Windows[0].Page;
+            System.Diagnostics.Debug.WriteLine($"Page type: {page?.GetType().Name}");
+
+            if (page is AppShell shell)
             {
-                System.Diagnostics.Debug.WriteLine($"Firebase save error: {ex.Message}");
+                await shell.Navigation.PopToRootAsync();
+                System.Diagnostics.Debug.WriteLine("Shell PopToRootAsync done");
+            }
+            else if (page is NavigationPage navPage)
+            {
+                await navPage.PopToRootAsync();
+                System.Diagnostics.Debug.WriteLine("NavPage PopToRootAsync done");
             }
         }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error: {ex.Message}\n{ex.StackTrace}");
+        }
+        finally
+        {
+            IsCompleting = false;
+        }
     }
+
 
     [RelayCommand]
     private void ChangeFieldType(CompletedExercise exercise)

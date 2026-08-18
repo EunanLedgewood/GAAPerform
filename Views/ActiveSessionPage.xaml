@@ -50,24 +50,83 @@
 
                 <!-- Start session screen -->
                 <VerticalStackLayout
-                    IsVisible="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"
-                    Spacing="0">
-                    <VerticalStackLayout IsVisible="{Binding IsNotFinished}" Spacing="0">
-                        <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+    IsVisible="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"
+    Spacing="0">
+                    <VerticalStackLayout IsVisible="{Binding IsNotFinished}" Spacing="16">
+
+                        <!-- Session overview -->
+                        <Border Style="{StaticResource Card}">
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="{Binding SessionTitle}" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
-                                <Label Text="Tap Start Session to begin. Your timer will start automatically." FontSize="13" TextColor="{StaticResource SecondaryText}" LineHeight="1.5"/>
+                                <Label Text="{Binding SessionDescription}" FontSize="13" TextColor="{StaticResource SecondaryText}" LineHeight="1.5"/>
+                                <Grid ColumnDefinitions="*,*" Margin="0,4,0,0">
+                                    <Border Grid.Column="0"
+                        BackgroundColor="{StaticResource SurfaceBackground}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="10,8"
+                        Margin="0,0,4,0">
+                                        <VerticalStackLayout Spacing="2">
+                                            <Label Text="DURATION" FontSize="10" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5"/>
+                                            <Label Text="{Binding SessionDuration}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource GaaGreen}"/>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                    <Border Grid.Column="1"
+                        BackgroundColor="{StaticResource SurfaceBackground}"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 8"
+                        Padding="10,8"
+                        Margin="4,0,0,0">
+                                        <VerticalStackLayout Spacing="2">
+                                            <Label Text="INTENSITY" FontSize="10" TextColor="{StaticResource SecondaryText}" CharacterSpacing="0.5"/>
+                                            <Label Text="{Binding SessionIntensity}" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource GaaGreen}"/>
+                                        </VerticalStackLayout>
+                                    </Border>
+                                </Grid>
                             </VerticalStackLayout>
                         </Border>
+
+                        <!-- Exercise preview -->
+                        <Label Text="EXERCISES" Style="{StaticResource SectionTitle}"/>
+                        <CollectionView ItemsSource="{Binding PreviewExercises}" SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:CompletedExercise">
+                                    <Border Style="{StaticResource Card}">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                                <Label Text="{Binding Name}" FontSize="14" FontAttributes="Bold" TextColor="{StaticResource PrimaryText}"/>
+                                                <Label Text="{Binding CoachNotes}" FontSize="12" TextColor="{StaticResource SecondaryText}"
+                                    IsVisible="{Binding CoachNotes, Converter={StaticResource StringToBoolConverter}}"/>
+                                            </VerticalStackLayout>
+                                            <Button
+                                Grid.Column="1"
+                                Text="▶"
+                                BackgroundColor="#ff0000"
+                                TextColor="White"
+                                FontSize="11"
+                                CornerRadius="6"
+                                WidthRequest="32"
+                                HeightRequest="32"
+                                VerticalOptions="Center"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ActiveSessionViewModel}}, Path=WatchExerciseVideoCommand}"
+                                CommandParameter="{Binding .}"
+                                IsVisible="{Binding EffectiveVideoUrl, Converter={StaticResource StringToBoolConverter}}"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
                         <Button
-                            Text="▶ Start Session"
-                            Command="{Binding StartSessionCommand}"
-                            BackgroundColor="{StaticResource GaaGreen}"
-                            TextColor="White"
-                            FontSize="16"
-                            FontAttributes="Bold"
-                            CornerRadius="8"
-                            HeightRequest="52"/>
+            Text="▶ Start Session"
+            Command="{Binding StartSessionCommand}"
+            BackgroundColor="{StaticResource GaaGreen}"
+            TextColor="White"
+            FontSize="16"
+            FontAttributes="Bold"
+            CornerRadius="8"
+            HeightRequest="52"/>
+
                     </VerticalStackLayout>
                 </VerticalStackLayout>
 
@@ -465,14 +524,15 @@
                     </Border>
 
                     <Button
-                        Text="Complete Session ✓"
-                        Command="{Binding CompleteSessionCommand}"
-                        BackgroundColor="{StaticResource GaaGreen}"
-                        TextColor="White"
-                        FontSize="16"
-                        FontAttributes="Bold"
-                        CornerRadius="8"
-                        HeightRequest="52"/>
+    Text="Complete Session ✓"
+    Command="{Binding CompleteSessionCommand}"
+    IsEnabled="{Binding IsCompleting, Converter={StaticResource InverseBoolConverter}}"
+    BackgroundColor="{StaticResource GaaGreen}"
+    TextColor="White"
+    FontSize="16"
+    FontAttributes="Bold"
+    CornerRadius="8"
+    HeightRequest="52"/>
                 </VerticalStackLayout>
 
             </VerticalStackLayout>
