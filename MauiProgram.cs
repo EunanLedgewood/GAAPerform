@@ -1,8 +1,9 @@
-﻿using GAAPerform.Services;
+﻿using GAAPerform.Auth;
+using GAAPerform.Services;
 using GAAPerform.ViewModels;
 using GAAPerform.Views;
 using Microsoft.Extensions.Logging;
-using GAAPerform.Auth;
+using Plugin.LocalNotification;
 
 namespace GAAPerform;
 
@@ -14,6 +15,7 @@ public static class MauiProgram
 
         builder
             .UseMauiApp<App>()
+            .UseLocalNotification()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -27,6 +29,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<FirebaseAuthService>();
         builder.Services.AddSingleton<FirestoreService>();
         builder.Services.AddSingleton<ExerciseCacheService>();
+        builder.Services.AddSingleton<NotificationService>();
 
         // ViewModels
         builder.Services.AddTransient<WeekViewModel>();
@@ -63,6 +66,9 @@ public static class MauiProgram
         builder.Services.AddTransient<MePage>();
         builder.Services.AddTransient<SettingsPage>();
         builder.Services.AddTransient<ActiveSessionPage>();
+
+        //Notifications
+        builder.UseLocalNotification();
 
 #if DEBUG
         builder.Logging.AddDebug();

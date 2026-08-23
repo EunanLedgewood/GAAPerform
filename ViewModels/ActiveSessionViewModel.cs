@@ -234,6 +234,10 @@ public partial class ActiveSessionViewModel : ObservableObject
                 SessionType = SessionType
             });
 
+            var notificationService = IPlatformApplication.Current!.Services
+    .GetRequiredService<NotificationService>();
+            notificationService.SchedulePostSessionReminder();
+
             if (_day is not null)
             {
                 var key = $"completed_{_day.Date.Date:yyyy-MM-dd}";

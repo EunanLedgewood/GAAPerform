@@ -1,8 +1,7 @@
-﻿using Android.Telephony;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GAAPerform.Auth;
-using IntelliJ.Lang.Annotations;
+using GAAPerform.Services;
 
 namespace GAAPerform.ViewModels;
 
@@ -69,6 +68,14 @@ public partial class AuthViewModel : ObservableObject
             var role = await _firestore.GetUserRoleAsync(_auth.CurrentUserId!, token) ?? "Player";
             Preferences.Set("user_role", role);
             Preferences.Set("is_logged_in", true);
+            Preferences.Set("user_email", _auth.CurrentUserEmail ?? string.Empty);
+
+            // Schedule notifications
+            var notificationService = IPlatformApplication.Current!.Services
+                .GetRequiredService<NotificationService>();
+            notificationService.RequestPermissionAsync();
+            notificationService.ScheduleDailyReminder(TimeSpan.FromHours(9));
+
             Application.Current!.Windows[0].Page = new AppShell();
         }
         else
@@ -76,8 +83,6 @@ public partial class AuthViewModel : ObservableObject
             ErrorMessage = "Invalid email or password. Please try again.";
             HasError = true;
         }
-
-        Preferences.Set("user_email", _auth.CurrentUserEmail ?? string.Empty);
 
         IsBusy = false;
     }
@@ -118,6 +123,13 @@ public partial class AuthViewModel : ObservableObject
             await _firestore.SaveUserProfileAsync(_auth.CurrentUserId!, Email, role, token);
             Preferences.Set("user_role", role);
             Preferences.Set("is_logged_in", true);
+            Preferences.Set("user_email", Email);
+
+            // Schedule notifications
+            var notificationService = IPlatformApplication.Current!.Services
+                .GetRequiredService<NotificationService>();
+            notificationService.RequestPermissionAsync();
+            notificationService.ScheduleDailyReminder(TimeSpan.FromHours(9));
 
             Application.Current!.Windows[0].Page = new AppShell();
         }
@@ -126,8 +138,6 @@ public partial class AuthViewModel : ObservableObject
             ErrorMessage = error ?? "Registration failed. Please try again.";
             HasError = true;
         }
-
-        Preferences.Set("user_email", Email);
 
         IsBusy = false;
     }
