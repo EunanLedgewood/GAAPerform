@@ -234,9 +234,13 @@ public partial class ActiveSessionViewModel : ObservableObject
                 SessionType = SessionType
             });
 
-            var notificationService = IPlatformApplication.Current!.Services
-    .GetRequiredService<NotificationService>();
-            notificationService.SchedulePostSessionReminder();
+            // Only schedule if enabled
+            if (Preferences.Get("post_session_reminder_enabled", true))
+            {
+                var notificationService = IPlatformApplication.Current!.Services
+                    .GetRequiredService<NotificationService>();
+                notificationService.SchedulePostSessionReminder();
+            }
 
             if (_day is not null)
             {

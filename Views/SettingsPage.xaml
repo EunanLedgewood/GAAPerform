@@ -5,7 +5,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Settings"
     BackgroundColor="{StaticResource PageBackground}">
-
     <ScrollView>
         <VerticalStackLayout Padding="16,12" Spacing="0">
 
@@ -31,8 +30,43 @@
                         <Label Grid.Column="0" Text="Dark Mode" FontSize="15" TextColor="{StaticResource PrimaryText}" VerticalOptions="Center"/>
                         <Switch Grid.Column="1" x:Name="DarkModeSwitch" Toggled="OnDarkModeToggled"/>
                     </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Notifications -->
+            <Label Text="NOTIFICATIONS" Style="{StaticResource SectionTitle}" Margin="0,0,0,8"/>
+            <Border Style="{StaticResource Card}" Margin="0,0,0,16">
+                <VerticalStackLayout Spacing="12" Padding="0,4">
+
+                    <Grid ColumnDefinitions="*,Auto" Padding="4,0">
+                        <Label Grid.Column="0" Text="Daily reminder" FontSize="15" TextColor="{StaticResource PrimaryText}" VerticalOptions="Center"/>
+                        <Switch Grid.Column="1" x:Name="DailyReminderSwitch" Toggled="OnDailyReminderToggled"/>
+                    </Grid>
+
+                    <VerticalStackLayout x:Name="ReminderTimePanel" Spacing="8" Padding="4,0">
+                        <Label Text="REMINDER TIME" Style="{StaticResource SectionTitle}"/>
+                        <Border
+                            BackgroundColor="{StaticResource SurfaceBackground}"
+                            StrokeThickness="0.5"
+                            Stroke="{StaticResource BorderColor}"
+                            StrokeShape="RoundRectangle 10"
+                            Padding="12,4">
+                            <TimePicker
+                                x:Name="ReminderTimePicker"
+                                Time="09:00:00"
+                                TextColor="{StaticResource PrimaryText}"
+                                BackgroundColor="Transparent"
+                                PropertyChanged="OnReminderTimeChanged"/>
+                        </Border>
+                    </VerticalStackLayout>
+
                     <BoxView HeightRequest="0.5" BackgroundColor="{StaticResource BorderColor}"/>
-                    <Button Text="Notification Settings" Clicked="OnNotificationsTapped" Style="{StaticResource SettingsButton}"/>
+
+                    <Grid ColumnDefinitions="*,Auto" Padding="4,0">
+                        <Label Grid.Column="0" Text="Post-session reminder" FontSize="15" TextColor="{StaticResource PrimaryText}" VerticalOptions="Center"/>
+                        <Switch Grid.Column="1" x:Name="PostSessionSwitch" Toggled="OnPostSessionToggled"/>
+                    </Grid>
+
                 </VerticalStackLayout>
             </Border>
 
@@ -45,9 +79,10 @@
                     <Button Text="Privacy Policy" Clicked="OnPrivacyTapped" Style="{StaticResource SettingsButton}"/>
                     <BoxView HeightRequest="0.5" BackgroundColor="{StaticResource BorderColor}"/>
                     <Button Text="Check for Updates" Clicked="OnUpdatesTapped" Style="{StaticResource SettingsButton}"/>
+                    <BoxView HeightRequest="0.5" BackgroundColor="{StaticResource BorderColor}"/>
                     <Button Text="🔧 Seed Exercise Library" Clicked="OnSeedExercisesTapped"
-    BackgroundColor="Transparent" TextColor="{StaticResource SecondaryText}"
-    FontSize="13" HorizontalOptions="Fill" Padding="16,12"/>
+                        BackgroundColor="Transparent" TextColor="{StaticResource SecondaryText}"
+                        FontSize="13" HorizontalOptions="Fill" Padding="16,12"/>
                 </VerticalStackLayout>
             </Border>
 
